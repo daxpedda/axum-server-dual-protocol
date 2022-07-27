@@ -1,0 +1,22 @@
+[package]
+name = "axum-server-upgrade-http"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum-server = { version = "0.4", features = ["tls-rustls"] }
+bytes = { version = "1", default-features = false }
+http = "0.2"
+http-body = "0.4"
+hyper = "0.14"
+pin-project-lite = "0.2"
+tokio = "1"
+tokio-rustls = { version = "0.23", default-features = false }
+tokio-util = "0.7"
+tower-layer = "0.3"
+
+[dev-dependencies]
+anyhow = "1"
+axum = { version = "0.5", default-features = false }
+rcgen = { version = "0.9", default-features = false }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
