@@ -17,10 +17,13 @@ use tokio_util::either::Either;
 /// Create a [`Server`] that will bind to provided address, accepting both HTTP
 /// and HTTPS on the same port.
 #[must_use]
-pub fn bind_dual_protocol(addr: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
+pub fn bind_dual_protocol(
+	address: SocketAddr,
+	config: RustlsConfig,
+) -> Server<DualProtocolAcceptor> {
 	let acceptor = DualProtocolAcceptor::new(config);
 
-	Server::bind(addr).acceptor(acceptor)
+	Server::bind(address).acceptor(acceptor)
 }
 
 /// Simultaneous HTTP and HTTPS [`Accept`]or.

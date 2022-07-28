@@ -22,11 +22,11 @@ async fn main() -> Result<()> {
 		.route("/", routing::get(|| async { "Hello, world!" }))
 		.layer(UpgradeHttpLayer);
 
-	let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-	println!("Listening on {}.", addr);
+	let address = SocketAddr::from(([127, 0, 0, 1], 3000));
+	println!("Listening on {}.", address);
 	println!(
 		"Connecting to \"http://{}\" with any path or query will automatically redirect to \"https://{0}\" with the same path and query.",
-		addr
+		address
 	);
 
 	let certificate = rcgen::generate_simple_self_signed([])?;
@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
 	)
 	.await?;
 
-	axum_server_dual_protocol::bind_dual_protocol(addr, config)
+	axum_server_dual_protocol::bind_dual_protocol(address, config)
 		.serve(app.into_make_service())
 		.await?;
 
