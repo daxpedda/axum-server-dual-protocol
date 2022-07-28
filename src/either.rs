@@ -5,7 +5,7 @@ use std::task::{Context, Poll};
 
 use bytes::Buf;
 use http::HeaderMap;
-use http_body::{Body, SizeHint};
+use hyper::{body::HttpBody, body::SizeHint};
 use proj::EitherProj;
 
 /// Sum type with two cases: `Left` and `Right`, used if a body can be one of
@@ -43,10 +43,10 @@ impl<L> Either<L, L> {
     }
 }
 
-impl<L, R, Data> Body for Either<L, R>
+impl<L, R, Data> HttpBody for Either<L, R>
 where
-    L: Body<Data = Data>,
-    R: Body<Data = Data>,
+    L: HttpBody<Data = Data>,
+    R: HttpBody<Data = Data>,
     L::Error: Into<Box<dyn Error + Send + Sync>>,
     R::Error: Into<Box<dyn Error + Send + Sync>>,
     Data: Buf,
