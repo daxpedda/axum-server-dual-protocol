@@ -1,4 +1,4 @@
-// This is already fixed in newer versions of Clippy:
+// TODO: This is already fixed in newer versions of Clippy:
 // <https://github.com/rust-lang/rust-clippy/pull/8802>.
 #![allow(clippy::unwrap_used)]
 

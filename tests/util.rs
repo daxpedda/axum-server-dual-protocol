@@ -13,7 +13,7 @@ use hyper::service::Service;
 use hyper::Body;
 use reqwest::Certificate;
 
-// False-positive: <https://github.com/rust-lang/rust-clippy/issues/9076>.
+// TODO: False-positive: <https://github.com/rust-lang/rust-clippy/issues/9076>.
 #[allow(clippy::trait_duplication_in_bounds)]
 pub(crate) async fn test<RouterBody, ResponseBody, ClientFn, ClientFuture>(
 	app: Router<RouterBody>,
