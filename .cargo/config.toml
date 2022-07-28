@@ -62,7 +62,6 @@ rustflags = [
 	"-Wunused_results",
 	"-Wvariant_size_differences",
 	# Temporary.
-	"-Aclippy::cargo_common_metadata",
 	"-Aclippy::missing_docs_in_private_items",
 	"-Amissing_docs",
 ]

@@ -1,6 +1,16 @@
 [package]
+categories = [
+	"web-programming",
+	"web-programming::http-server",
+	"network-programming",
+	"asynchronous",
+]
+description = "Host a HTTP and HTTPS server on the same port with `axum-server`"
 edition = "2021"
+keywords = ["axum-server", "server", "web", "http", "https"]
+license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
+repository = "https://github.com/daxpedda/axum-server-dual-protocol"
 version = "0.1.0"
 
 [dependencies]
