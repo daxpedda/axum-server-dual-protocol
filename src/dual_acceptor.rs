@@ -17,6 +17,7 @@ use tokio::io::ReadBuf;
 use tokio_rustls::server::TlsStream;
 use tokio_util::either::Either;
 
+#[must_use]
 pub fn bind_dual(addr: SocketAddr, config: RustlsConfig) -> Server<DualAcceptor> {
     let acceptor = DualAcceptor::new(config);
 
@@ -29,6 +30,7 @@ pub struct DualAcceptor {
 }
 
 impl DualAcceptor {
+    #[must_use]
     pub fn new(config: RustlsConfig) -> Self {
         Self {
             rustls: RustlsAcceptor::new(config),
@@ -74,8 +76,8 @@ struct PeekInner<Service> {
 }
 
 impl<Service> DualAcceptorFuture<Service> {
-    fn new(stream: AddrStream, service: Service, rustls: RustlsAcceptor) -> Self {
-        DualAcceptorFuture {
+    const fn new(stream: AddrStream, service: Service, rustls: RustlsAcceptor) -> Self {
+        Self {
             inner: DualAcceptorFutureInner::Peek {
                 inner: Some(PeekInner {
                     stream,

@@ -1,3 +1,5 @@
+#![allow(unsafe_code, warnings)]
+
 use std::error::Error;
 use std::fmt::Debug;
 use std::pin::Pin;

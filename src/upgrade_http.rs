@@ -16,6 +16,7 @@ use hyper::Body;
 use pin_project_lite::pin_project;
 use tower_layer::Layer;
 
+#[derive(Clone, Copy, Debug)]
 pub struct UpgradeHttpLayer;
 
 impl<Service> Layer<Service> for UpgradeHttpLayer {
@@ -26,21 +27,22 @@ impl<Service> Layer<Service> for UpgradeHttpLayer {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct UpgradeHttp<Service> {
     service: Service,
 }
 
 impl<Service> UpgradeHttp<Service> {
-    pub fn new(service: Service) -> Self {
+    pub const fn new(service: Service) -> Self {
         Self { service }
     }
 
+    #[allow(clippy::missing_const_for_fn)]
     pub fn into_inner(self) -> Service {
         self.service
     }
 
-    pub fn get_ref(&self) -> &Service {
+    pub const fn get_ref(&self) -> &Service {
         &self.service
     }
 
@@ -124,13 +126,13 @@ impl<Service, Request> UpgradeHttpFuture<Service, Request>
 where
     Service: HyperService<Request>,
 {
-    fn new_service(future: Service::Future) -> Self {
+    const fn new_service(future: Service::Future) -> Self {
         Self {
             inner: UpgradeHttpFutureInner::Service { future },
         }
     }
 
-    fn new_upgrade(response: Response<Body>) -> Self {
+    const fn new_upgrade(response: Response<Body>) -> Self {
         Self {
             inner: UpgradeHttpFutureInner::Upgrade {
                 response: Some(response),

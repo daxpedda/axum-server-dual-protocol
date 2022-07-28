@@ -12,7 +12,9 @@ use std::error::Error as StdError;
 use std::future::Future;
 use std::net::SocketAddr;
 
-pub async fn test<RouterBody, ResponseBody, ClientFn, ClientFuture>(
+// False-positive: <https://github.com/rust-lang/rust-clippy/issues/9076>.
+#[allow(clippy::trait_duplication_in_bounds)]
+pub(crate) async fn test<RouterBody, ResponseBody, ClientFn, ClientFuture>(
     app: Router<RouterBody>,
     client_logic: ClientFn,
 ) -> Result<()>
