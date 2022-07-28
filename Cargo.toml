@@ -11,7 +11,7 @@ hyper = "0.14"
 pin-project-lite = "0.2"
 tokio = "1"
 tokio-rustls = { version = "0.23", default-features = false }
-tokio-util = "0.7"
+tokio-util = "0.7.1"
 tower-layer = "0.3"
 
 [dev-dependencies]
