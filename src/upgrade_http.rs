@@ -4,7 +4,7 @@ use std::task::{Context, Poll};
 
 use http::header::{HOST, LOCATION};
 use http::uri::{Authority, Scheme};
-use http::{Request, Response, Uri};
+use http::{Request, Response, StatusCode, Uri};
 use hyper::service::Service as HyperService;
 use hyper::Body;
 use pin_project_lite::pin_project;
@@ -93,11 +93,13 @@ where
 
 					let uri = uri.build().expect("invalid path and query");
 
-					response.status(301).header(LOCATION, uri.to_string())
+					response
+						.status(StatusCode::MOVED_PERMANENTLY)
+						.header(LOCATION, uri.to_string())
 				} else {
 					// If we can't extract the host, tell the client there is something wrong with
 					// their request.
-					response.status(400)
+					response.status(StatusCode::BAD_REQUEST)
 				}
 				.body(Body::empty())
 				.expect("invalid header or body");
@@ -121,7 +123,7 @@ pin_project! {
 
 pin_project! {
 	#[project = UpgradeHttpFutureProj]
-	pub enum FutureInner<Service, Request>
+	enum FutureInner<Service, Request>
 	where
 		Service: HyperService<Request>
 	{
