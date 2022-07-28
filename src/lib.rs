@@ -75,10 +75,10 @@
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
 
-mod dual_protocol_acceptor;
+mod dual_protocol;
 mod either;
 mod upgrade_http;
 
-pub use dual_protocol_acceptor::{bind_dual_protocol, DualProtocolAcceptor, DualProtocolFuture};
+pub use dual_protocol::{bind_dual_protocol, DualProtocolAcceptor, DualProtocolFuture};
 pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};
