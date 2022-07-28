@@ -3,6 +3,7 @@
 [![Crates.io Version](https://img.shields.io/crates/v/axum-server-dual-protocol.svg)](https://crates.io/crates/axum-server-dual-protocol)
 [![Live Build Status](https://img.shields.io/github/workflow/status/daxpedda/axum-server-dual-protocol/Test/main)](https://github.com/daxpedda/axum-server-dual-protocol/actions/workflows/test.yml)
 [![Docs.rs Documentation](https://img.shields.io/docsrs/axum-server-dual-protocol)](https://docs.rs/crate/axum-server-dual-protocol)
+[![Master Documentation](https://img.shields.io/github/workflow/status/daxpedda/axum-server-dual-protocol/Documentation/main)](https://daxpedda.github.io/axum-server-dual-protocol/axum_server_dual_protocol/index.html)
 
 ## Description
 
