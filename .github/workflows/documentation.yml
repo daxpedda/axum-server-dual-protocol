@@ -1,0 +1,45 @@
+name: Documentation
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  document-deploy:
+    name: Document & Deploy
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install nightly Rust
+        run: |
+          rustup toolchain install nightly --profile minimal --allow-downgrade
+          rustup default nightly
+      - name: Run Rustdoc
+        env:
+          RUSTDOCFLAGS: -Z unstable-options --enable-index-page
+        run: cargo doc --no-deps --document-private-items --examples
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: target/doc
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
