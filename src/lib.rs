@@ -37,7 +37,7 @@
 //! ```
 //!
 //! We now have a server accepting both HTTP and HTTPS requests! To use
-//! [`UpgradeHttpLayer`] we can simply add it to the [`Router`](axum::Router):
+//! [`UpgradeHttpLayer`] we can simply add it to the [`Router`]:
 //! ```
 //! # use axum::{routing, Router};
 //! # use axum_server_dual_protocol::UpgradeHttpLayer;
@@ -74,6 +74,13 @@
 //! submitted for inclusion in the work by you, as defined in the Apache-2.0
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
+//!
+//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/CHANGELOG.md
+//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-MIT
+//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-APACHE
+//! [`axum`]: https://docs.rs/axum/latest/axum
+//! [`Router`]: https://docs.rs/axum/latest/axum/struct.Router.html
+//! [`tower`]: https://docs.rs/tower/latest/tower
 
 mod dual_protocol;
 mod either;
