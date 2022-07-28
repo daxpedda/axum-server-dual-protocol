@@ -99,13 +99,13 @@ pin_project! {
 		Service: HyperService<Request>,
 	{
 		#[pin]
-		inner: UpgradeHttpFutureInner<Service, Request>,
+		inner: FutureInner<Service, Request>,
 	}
 }
 
 pin_project! {
 	#[project = UpgradeHttpFutureProj]
-	pub enum UpgradeHttpFutureInner<Service, Request>
+	pub enum FutureInner<Service, Request>
 	where
 		Service: HyperService<Request>
 	{
@@ -125,13 +125,13 @@ where
 {
 	const fn new_service(future: Service::Future) -> Self {
 		Self {
-			inner: UpgradeHttpFutureInner::Service { future },
+			inner: FutureInner::Service { future },
 		}
 	}
 
 	const fn new_upgrade(response: Response<Body>) -> Self {
 		Self {
-			inner: UpgradeHttpFutureInner::Upgrade {
+			inner: FutureInner::Upgrade {
 				response: Some(response),
 			},
 		}

@@ -6,7 +6,7 @@ mod util;
 
 use anyhow::Result;
 use axum::{routing, Router};
-use axum_server_upgrade_http::UpgradeHttpLayer;
+use axum_server_dual_protocol::UpgradeHttpLayer;
 use http::header::LOCATION;
 use reqwest::redirect::Policy;
 use reqwest::{Client, StatusCode};

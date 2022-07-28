@@ -44,10 +44,13 @@ where
 				RustlsConfig::from_der(vec![certificate], key_pair.serialize_private_key_der())
 					.await?;
 
-			axum_server_upgrade_http::bind_dual(SocketAddr::from(([127, 0, 0, 1], 0)), config)
-				.handle(handle)
-				.serve(app.into_make_service())
-				.await?;
+			axum_server_dual_protocol::bind_dual_protocol(
+				SocketAddr::from(([127, 0, 0, 1], 0)),
+				config,
+			)
+			.handle(handle)
+			.serve(app.into_make_service())
+			.await?;
 
 			Result::<_, Error>::Ok(())
 		}

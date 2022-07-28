@@ -15,18 +15,18 @@ use tokio_rustls::server::TlsStream;
 use tokio_util::either::Either;
 
 #[must_use]
-pub fn bind_dual(addr: SocketAddr, config: RustlsConfig) -> Server<DualAcceptor> {
-	let acceptor = DualAcceptor::new(config);
+pub fn bind_dual_protocol(addr: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
+	let acceptor = DualProtocolAcceptor::new(config);
 
 	Server::bind(addr).acceptor(acceptor)
 }
 
 #[derive(Debug, Clone)]
-pub struct DualAcceptor {
+pub struct DualProtocolAcceptor {
 	rustls: RustlsAcceptor,
 }
 
-impl DualAcceptor {
+impl DualProtocolAcceptor {
 	#[must_use]
 	pub fn new(config: RustlsConfig) -> Self {
 		Self {
@@ -35,27 +35,27 @@ impl DualAcceptor {
 	}
 }
 
-impl<Service> Accept<AddrStream, Service> for DualAcceptor {
+impl<Service> Accept<AddrStream, Service> for DualProtocolAcceptor {
 	type Stream = Either<TlsStream<AddrStream>, AddrStream>;
 	type Service = Service;
-	type Future = DualAcceptorFuture<Service>;
+	type Future = DualProtocolFuture<Service>;
 
 	fn accept(&self, stream: AddrStream, service: Service) -> Self::Future {
-		DualAcceptorFuture::new(stream, service, self.rustls.clone())
+		DualProtocolFuture::new(stream, service, self.rustls.clone())
 	}
 }
 
 pin_project! {
-	#[project = DualAcceptorFutureProj]
-	pub struct DualAcceptorFuture<Service> {
+	#[project = DualProtocolFutureProj]
+	pub struct DualProtocolFuture<Service> {
 		#[pin]
-		inner: DualAcceptorFutureInner<Service>,
+		inner: FutureInner<Service>,
 	}
 }
 
 pin_project! {
-	#[project = DualAcceptorFutureInnerProj]
-	enum DualAcceptorFutureInner<Service> {
+	#[project = FutureInnerProj]
+	enum FutureInner<Service> {
 		Peek {
 			inner: Option<PeekInner<Service>>,
 		},
@@ -72,10 +72,10 @@ struct PeekInner<Service> {
 	rustls: RustlsAcceptor,
 }
 
-impl<Service> DualAcceptorFuture<Service> {
+impl<Service> DualProtocolFuture<Service> {
 	const fn new(stream: AddrStream, service: Service, rustls: RustlsAcceptor) -> Self {
 		Self {
-			inner: DualAcceptorFutureInner::Peek {
+			inner: FutureInner::Peek {
 				inner: Some(PeekInner {
 					stream,
 					service,
@@ -86,13 +86,13 @@ impl<Service> DualAcceptorFuture<Service> {
 	}
 }
 
-impl<Service> DualAcceptorFutureProj<'_, Service> {
+impl<Service> DualProtocolFutureProj<'_, Service> {
 	fn upgrade(&mut self, future: <RustlsAcceptor as Accept<AddrStream, Service>>::Future) {
-		self.inner.set(DualAcceptorFutureInner::Https { future });
+		self.inner.set(FutureInner::Https { future });
 	}
 }
 
-impl<Service> Future for DualAcceptorFuture<Service> {
+impl<Service> Future for DualProtocolFuture<Service> {
 	type Output = io::Result<(Either<TlsStream<AddrStream>, AddrStream>, Service)>;
 
 	fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
@@ -101,7 +101,7 @@ impl<Service> Future for DualAcceptorFuture<Service> {
 		// After successfully peeking, continue without unnecessary yielding.
 		loop {
 			match this.inner.as_mut().project() {
-				DualAcceptorFutureInnerProj::Peek { inner } => {
+				FutureInnerProj::Peek { inner } => {
 					let peek = inner.as_mut().expect("polled again after `Poll::Ready`");
 
 					let mut byte = 0;
@@ -130,7 +130,7 @@ impl<Service> Future for DualAcceptorFuture<Service> {
 						Poll::Pending => return Poll::Pending,
 					}
 				}
-				DualAcceptorFutureInnerProj::Https { future } => {
+				FutureInnerProj::Https { future } => {
 					return future
 						.poll(cx)
 						.map_ok(|(stream, service)| (Either::Left(stream), service))

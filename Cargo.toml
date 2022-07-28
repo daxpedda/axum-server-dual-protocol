@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "axum-server-upgrade-http"
+name = "axum-server-dual-protocol"
 version = "0.1.0"
 
 [dependencies]
