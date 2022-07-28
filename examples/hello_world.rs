@@ -1,3 +1,14 @@
+//! This example demonstrates the use-case of wanting to host a HTTPS server
+//! without a corresponding HTTP port to redirect HTTP requests from.
+//!
+//! Instead of hosting a HTTP server on a different port, this accepts both
+//! protocols on the same port and upgrades all HTTP requests correctly to
+//! HTTPS.
+//!
+//! You can try it by visiting <http://127.0.0.1:3000>. You can also observe
+//! any path added to the URI will redirect to the corresponding HTTPS URI.
+//! HTTPS requests should function as expected.
+
 use std::net::SocketAddr;
 
 use anyhow::Result;

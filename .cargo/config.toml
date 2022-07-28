@@ -10,6 +10,7 @@ rustflags = [
 	# Allowed Clippy lints.
 	"-Aclippy::module_name_repetitions",
 	"-Aclippy::redundant_pub_crate",
+	"-Aclippy::tabs_in_doc_comments",
 	# Clippy restriction lints.
 	"-Wclippy::as_conversions",
 	"-Wclippy::clone_on_ref_ptr",
@@ -63,5 +64,4 @@ rustflags = [
 	"-Wvariant_size_differences",
 	# Temporary.
 	"-Aclippy::missing_docs_in_private_items",
-	"-Amissing_docs",
 ]

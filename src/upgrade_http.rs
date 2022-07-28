@@ -12,6 +12,8 @@ use tower_layer::Layer;
 
 use crate::Either;
 
+/// [`Layer`] upgrading HTTP requests to HTTPS. See [`UpgradeHttp`] for more
+/// details.
 #[derive(Clone, Copy, Debug)]
 pub struct UpgradeHttpLayer;
 
@@ -23,25 +25,38 @@ impl<Service> Layer<Service> for UpgradeHttpLayer {
 	}
 }
 
+/// [`Service`](HyperService) upgrading HTTP requests to HTTPS by using a
+/// [301 "Moved Permanently"](https://tools.ietf.org/html/rfc7231#section-6.4.2)
+/// status code.
+///
+/// Note that this [`Service`](HyperService) always redirects with the given
+/// path and query. Depending on how you apply this [`Service`](HyperService) it
+/// will redirect even in the case of a resulting 404 "Not Found" status code at
+/// the destination.
 #[derive(Clone, Debug)]
 pub struct UpgradeHttp<Service> {
 	service: Service,
 }
 
 impl<Service> UpgradeHttp<Service> {
+	/// Creates a new [`UpgradeHttp`].
 	pub const fn new(service: Service) -> Self {
 		Self { service }
 	}
 
+	/// Consumes the [`UpgradeHttp`], returning the wrapped
+	/// [`Service`](HyperService).
 	#[allow(clippy::missing_const_for_fn)]
 	pub fn into_inner(self) -> Service {
 		self.service
 	}
 
+	/// Return a reference to the wrapped [`Service`](HyperService).
 	pub const fn get_ref(&self) -> &Service {
 		&self.service
 	}
 
+	/// Return a mutable reference to the wrapped [`Service`](HyperService).
 	pub fn get_mut(&mut self) -> &mut Service {
 		&mut self.service
 	}
@@ -94,6 +109,7 @@ where
 }
 
 pin_project! {
+	/// [`Future`](HyperService::Future) type for [`UpgradeHttp`].
 	pub struct UpgradeHttpFuture<Service, Request>
 	where
 		Service: HyperService<Request>,

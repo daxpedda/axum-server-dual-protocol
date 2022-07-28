@@ -1,3 +1,80 @@
+//! # Description
+//!
+//! Provides utilities to host a [`axum-server`](axum_server) server that
+//! accepts the HTTP and HTTPS protocol on the same port. See
+//! [`bind_dual_protocol`].
+//!
+//! A common use case for this is if a HTTPS server is hosted on a
+//! non-traditional port, having no corresponding HTTP port. This can be an
+//! issue for clients who try to connect over HTTP and get a connection reset
+//! error. For this specific purpose a [`Layer`](tower_layer::Layer) is provided
+//! that automatically upgrades any connection to HTTPS. See
+//! [`UpgradeHttpLayer`].
+//!
+//! # Usage
+//!
+//! The simplest way to start is to use [`bind_dual_protocol`]:
+//! ```no_run
+//! # use axum::{routing, Router};
+//! # use axum_server::tls_rustls::RustlsConfig;
+//! # #[tokio::main]
+//! # async fn main() -> anyhow::Result<()> {
+//! let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
+//!
+//! # let address = std::net::SocketAddr::from(([127, 0, 0, 1], 0));
+//! # let certificate = rcgen::generate_simple_self_signed([])?;
+//! # let private_key = certificate.serialize_private_key_der();
+//! # let certificate = vec![certificate.serialize_der()?];
+//! // User-supplied certificate and private key.
+//! let config = RustlsConfig::from_der(certificate, private_key).await?;
+//!
+//! axum_server_dual_protocol::bind_dual_protocol(address, config)
+//! 	.serve(app.into_make_service())
+//! 	.await?;
+//! #
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! We now have a server accepting both HTTP and HTTPS requests! To use
+//! [`UpgradeHttpLayer`] we can simply add it to the [`Router`](axum::Router):
+//! ```
+//! # use axum::{routing, Router};
+//! # use axum_server_dual_protocol::UpgradeHttpLayer;
+//! let app = Router::new()
+//! 	.route("/", routing::get(|| async { "Hello, world!" }))
+//! 	.layer(UpgradeHttpLayer);
+//! # // To help with type inference.
+//! # axum_server::bind(std::net::SocketAddr::from(([127, 0, 0, 1], 0)))
+//! # 	.serve(app.into_make_service());
+//! ```
+//!
+//! # MSRV
+//!
+//! As this library heavily relies on [`axum-server`](axum_server), [`axum`],
+//! [`tower`] and [`hyper`] the MSRV depends on theirs. At the point of time
+//! this was written the highest MSRV was [`axum`] with 1.56.
+//!
+//! # Changelog
+//!
+//! See the [CHANGELOG] file for details.
+//!
+//! # License
+//!
+//! Licensed under either of
+//!
+//! - Apache License, Version 2.0 ([LICENSE-APACHE] or <http://www.apache.org/licenses/LICENSE-2.0>)
+//! - MIT license ([LICENSE-MIT] or <http://opensource.org/licenses/MIT>)
+//!
+//! at your option.
+//!
+//! ## Contribution
+//!
+//! Unless you explicitly state otherwise, any contribution intentionally
+//! submitted for inclusion in the work by you, as defined in the Apache-2.0
+//! license, shall be dual licensed as above, without any additional terms or
+//! conditions.
+
 mod dual_protocol_acceptor;
 mod either;
 mod upgrade_http;

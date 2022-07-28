@@ -14,6 +14,8 @@ use tokio::io::ReadBuf;
 use tokio_rustls::server::TlsStream;
 use tokio_util::either::Either;
 
+/// Create a [`Server`] that will bind to provided address, accepting both HTTP
+/// and HTTPS on the same port.
 #[must_use]
 pub fn bind_dual_protocol(addr: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
 	let acceptor = DualProtocolAcceptor::new(config);
@@ -21,12 +23,14 @@ pub fn bind_dual_protocol(addr: SocketAddr, config: RustlsConfig) -> Server<Dual
 	Server::bind(addr).acceptor(acceptor)
 }
 
+/// Simultaneous HTTP and HTTPS [`Accept`]or.
 #[derive(Debug, Clone)]
 pub struct DualProtocolAcceptor {
 	rustls: RustlsAcceptor,
 }
 
 impl DualProtocolAcceptor {
+	/// Create a new [`DualProtocolAcceptor`].
 	#[must_use]
 	pub fn new(config: RustlsConfig) -> Self {
 		Self {
@@ -46,6 +50,7 @@ impl<Service> Accept<AddrStream, Service> for DualProtocolAcceptor {
 }
 
 pin_project! {
+	/// [`Future`](Accept::Future) type for [`DualProtocolAcceptor`].
 	#[project = DualProtocolFutureProj]
 	pub struct DualProtocolFuture<Service> {
 		#[pin]
