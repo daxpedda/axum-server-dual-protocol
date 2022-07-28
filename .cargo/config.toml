@@ -62,6 +62,4 @@ rustflags = [
 	"-Wunused_qualifications",
 	"-Wunused_results",
 	"-Wvariant_size_differences",
-	# Temporary.
-	"-Aclippy::missing_docs_in_private_items",
 ]

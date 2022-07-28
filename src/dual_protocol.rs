@@ -1,3 +1,7 @@
+//! Dual-protocol server implementation.
+//!
+//! See [`bind_dual_protocol`] and [`DualProtocolAcceptor`].
+
 use std::future::Future;
 use std::io::ErrorKind;
 use std::net::SocketAddr;
@@ -9,7 +13,7 @@ use axum_server::accept::Accept;
 use axum_server::tls_rustls::{RustlsAcceptor, RustlsConfig};
 use axum_server::Server;
 use hyper::server::conn::AddrStream;
-use pin_project_lite::pin_project;
+use pin_project::pin_project;
 use tokio::io::ReadBuf;
 use tokio_rustls::server::TlsStream;
 use tokio_util::either::Either;
@@ -29,6 +33,7 @@ pub fn bind_dual_protocol(
 /// Simultaneous HTTP and HTTPS [`Accept`]or.
 #[derive(Debug, Clone)]
 pub struct DualProtocolAcceptor {
+	/// [`RustlsAcceptor`] re-used to handle HTTPS requests.
 	rustls: RustlsAcceptor,
 }
 
@@ -52,51 +57,56 @@ impl<Service> Accept<AddrStream, Service> for DualProtocolAcceptor {
 	}
 }
 
-pin_project! {
-	/// [`Future`](Accept::Future) type for [`DualProtocolAcceptor`].
-	#[project = DualProtocolFutureProj]
-	pub struct DualProtocolFuture<Service> {
-		#[pin]
-		inner: FutureInner<Service>,
-	}
+/// [`Future`](Accept::Future) type for [`DualProtocolAcceptor`].
+#[derive(Debug)]
+#[pin_project(project = DualProtocolFutureProj)]
+pub struct DualProtocolFuture<Service>(
+	/// State. `enum` variants can't be private, so this solution was used to
+	/// hide implementation details.
+	#[pin]
+	FutureState<Service>,
+);
+
+/// State of accepting a new request for [`DualProtocolFuture`].
+#[derive(Debug)]
+#[pin_project(project = FutuereStateProj)]
+enum FutureState<Service> {
+	/// Peeking state, still trying to determine if the incoming request is HTTP
+	/// or HTTPS.
+	Peek(Option<PeekState<Service>>),
+	/// HTTPS state, it was determined that the incoming request is HTTPS, now
+	/// the [`RustlsAcceptor`] has to be polled to completion.
+	Https(#[pin] <RustlsAcceptor as Accept<AddrStream, Service>>::Future),
 }
 
-pin_project! {
-	#[project = FutureInnerProj]
-	enum FutureInner<Service> {
-		Peek {
-			inner: Option<PeekInner<Service>>,
-		},
-		Https {
-			#[pin]
-			future: <RustlsAcceptor as Accept<AddrStream, Service>>::Future
-		},
-	}
-}
-
-struct PeekInner<Service> {
+/// Data necessary to peek and proceed to the next state.
+#[derive(Debug)]
+struct PeekState<Service> {
+	/// Transport.
 	stream: AddrStream,
+	/// User-provided [`Service`](hyper::service::Service)
 	service: Service,
+	/// Used to proceed to the [`Https`](FutureState::Https) state if
+	/// necessary.
 	rustls: RustlsAcceptor,
 }
 
 impl<Service> DualProtocolFuture<Service> {
+	/// Create a new [`DualProtocolFuture`] in the [`Peek`](FutureState::Peek)
+	/// state.
 	const fn new(stream: AddrStream, service: Service, rustls: RustlsAcceptor) -> Self {
-		Self {
-			inner: FutureInner::Peek {
-				inner: Some(PeekInner {
-					stream,
-					service,
-					rustls,
-				}),
-			},
-		}
+		Self(FutureState::Peek(Some(PeekState {
+			stream,
+			service,
+			rustls,
+		})))
 	}
 }
 
 impl<Service> DualProtocolFutureProj<'_, Service> {
+	/// Proceed to the [`Https`](FutureState::Https) state.
 	fn upgrade(&mut self, future: <RustlsAcceptor as Accept<AddrStream, Service>>::Future) {
-		self.inner.set(FutureInner::Https { future });
+		self.0.set(FutureState::Https(future));
 	}
 }
 
@@ -108,8 +118,8 @@ impl<Service> Future for DualProtocolFuture<Service> {
 
 		// After successfully peeking, continue without unnecessary yielding.
 		loop {
-			match this.inner.as_mut().project() {
-				FutureInnerProj::Peek { inner } => {
+			match this.0.as_mut().project() {
+				FutuereStateProj::Peek(inner) => {
 					let peek = inner.as_mut().expect("polled again after `Poll::Ready`");
 
 					let mut byte = 0;
@@ -121,7 +131,7 @@ impl<Service> Future for DualProtocolFuture<Service> {
 							return Poll::Ready(Err(ErrorKind::UnexpectedEof.into()))
 						}
 						Poll::Ready(Ok(_)) => {
-							let PeekInner {
+							let PeekState {
 								stream,
 								service,
 								rustls,
@@ -138,7 +148,7 @@ impl<Service> Future for DualProtocolFuture<Service> {
 						Poll::Pending => return Poll::Pending,
 					}
 				}
-				FutureInnerProj::Https { future } => {
+				FutuereStateProj::Https(future) => {
 					return future
 						.poll(cx)
 						.map_ok(|(stream, service)| (Either::Left(stream), service))
