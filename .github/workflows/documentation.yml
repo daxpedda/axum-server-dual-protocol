@@ -26,14 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install nightly Rust
-        run: |
-          rustup toolchain install nightly --profile minimal --allow-downgrade
-          rustup default nightly
       - name: Run Rustdoc
-        env:
-          RUSTDOCFLAGS: -Z unstable-options --enable-index-page
-        run: cargo doc --no-deps --document-private-items --examples
+        run: cargo doc --no-deps --document-private-items
       - name: Setup Pages
         uses: actions/configure-pages@v1
       - name: Upload artifact
