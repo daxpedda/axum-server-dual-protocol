@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build-test:
-    name: Build + Test
+    name: Build & Test
 
     runs-on: ubuntu-latest
 
@@ -12,11 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: cargo build --workspace
+        run: cargo build
       - name: Test
-        run: cargo test --workspace --all-targets --no-fail-fast
+        run: cargo test --all-targets --no-fail-fast
       - name: Documentation Test
-        run: cargo test --workspace --doc --no-fail-fast
+        run: cargo test --doc --no-fail-fast
 
   minimal-versions:
     name: Minimal Versions

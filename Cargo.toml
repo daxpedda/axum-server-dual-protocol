@@ -7,10 +7,12 @@ categories = [
 ]
 description = "Host a HTTP and HTTPS server on the same port with `axum-server`"
 edition = "2021"
+include = ["CHANGELOG.md", "examples/**/*", "LICENSE-*", "src/**/*"]
 keywords = ["axum-server", "server", "web", "http", "https"]
 license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
+rust-version = "1.56"
 version = "0.1.0"
 
 [dependencies]
@@ -36,3 +38,6 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 name = "util"
 path = "tests/util.rs"
 test = false
+
+[package.metadata.docs.rs]
+targets = []
