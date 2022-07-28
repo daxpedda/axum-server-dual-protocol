@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Update Rust
+      - name: Install nightly Rust
         run: |
           rustup toolchain install nightly --profile minimal --component rustfmt --allow-downgrade
           rustup default nightly

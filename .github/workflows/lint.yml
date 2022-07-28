@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   clippy-rustdoc:
-    name: Clippy + Rustdoc
+    name: Clippy & Rustdoc
 
     runs-on: ubuntu-latest
 
@@ -12,10 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run Clippy
-        run:
-          cargo clippy --all-targets --workspace -- -D warnings
+        run: cargo clippy --all-targets -- -D warnings
       - name: Run Rustdoc
         env:
           RUSTDOCFLAGS: -D warnings
-        run:
-          cargo doc --no-deps --document-private-items --examples --workspace
+        run: cargo doc --no-deps --document-private-items --examples
