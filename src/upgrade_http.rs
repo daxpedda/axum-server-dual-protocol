@@ -137,17 +137,20 @@ pin_project! {
 	}
 }
 
+// TODO: This was stabilized in 1.61, our MSRV is 1.56 currently because of
+// `axum`. See <https://github.com/rust-lang/rust/issues/93706>.
+#[allow(clippy::missing_const_for_fn)]
 impl<Service, Request> UpgradeHttpFuture<Service, Request>
 where
 	Service: HyperService<Request>,
 {
-	const fn new_service(future: Service::Future) -> Self {
+	fn new_service(future: Service::Future) -> Self {
 		Self {
 			inner: FutureInner::Service { future },
 		}
 	}
 
-	const fn new_upgrade(response: Response<Body>) -> Self {
+	fn new_upgrade(response: Response<Body>) -> Self {
 		Self {
 			inner: FutureInner::Upgrade {
 				response: Some(response),
