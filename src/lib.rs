@@ -78,9 +78,9 @@
 //! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/CHANGELOG.md
 //! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-MIT
 //! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-APACHE
-//! [`axum`]: https://docs.rs/axum/latest/axum
-//! [`Router`]: https://docs.rs/axum/latest/axum/struct.Router.html
-//! [`tower`]: https://docs.rs/tower/latest/tower
+//! [`axum`]: https://docs.rs/axum/0.5
+//! [`Router`]: https://docs.rs/axum/0.5/axum/struct.Router.html
+//! [`tower`]: https://docs.rs/tower/0.4
 
 mod dual_protocol;
 mod either;
