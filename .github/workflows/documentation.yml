@@ -24,10 +24,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install nightly Rust
+        run: |
+          rustup toolchain install nightly --profile minimal
+          rustup default nightly
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run Rustdoc
-        run: cargo doc --no-deps --document-private-items
+        env:
+          RUSTDOCFLAGS: --crate-version main
+        run:
+          cargo doc --no-deps --document-private-items -Z rustdoc-map -Z rustdoc-scrape-examples=examples
       - name: Setup Pages
         uses: actions/configure-pages@v1
       - name: Upload artifact
