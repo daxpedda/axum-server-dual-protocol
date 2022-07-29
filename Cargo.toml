@@ -40,4 +40,5 @@ path = "tests/util.rs"
 test = false
 
 [package.metadata.docs.rs]
+cargo-args = ["-Zrustdoc-scrape-examples=examples"]
 targets = []
