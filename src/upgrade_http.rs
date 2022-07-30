@@ -17,8 +17,9 @@ use tower_layer::Layer;
 
 use crate::Either;
 
-/// [`Layer`] upgrading HTTP requests to HTTPS. See [`UpgradeHttp`] for more
-/// details.
+/// [`Layer`] upgrading HTTP requests to HTTPS.
+///
+/// See [`UpgradeHttp`] for more details.
 #[derive(Clone, Copy, Debug)]
 pub struct UpgradeHttpLayer;
 
@@ -122,21 +123,7 @@ pub struct UpgradeHttpFuture<Service, Request>(#[pin] FutureServe<Service, Reque
 where
 	Service: HyperService<Request>;
 
-// Rust can't figure out the correct bounds.
-impl<Service, Request> Debug for UpgradeHttpFuture<Service, Request>
-where
-	Service: HyperService<Request>,
-	FutureServe<Service, Request>: Debug,
-{
-	fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
-		formatter
-			.debug_tuple("UpgradeHttpFuture")
-			.field(&self.0)
-			.finish()
-	}
-}
-
-/// [`Future`] holding what to serve for [`UpgradeHttpFuture`].
+/// Holds [`Future`] to serve for [`UpgradeHttpFuture`].
 #[derive(Debug)]
 #[pin_project(project = UpgradeHttpFutureProj)]
 enum FutureServe<Service, Request>
@@ -149,6 +136,20 @@ where
 	/// The request was using the HTTP protocol, so we
 	/// will upgrade the connection.
 	Upgrade(Option<Response<Body>>),
+}
+
+// Rust can't figure out the correct bounds.
+impl<Service, Request> Debug for UpgradeHttpFuture<Service, Request>
+where
+	Service: HyperService<Request>,
+	FutureServe<Service, Request>: Debug,
+{
+	fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+		formatter
+			.debug_tuple("UpgradeHttpFuture")
+			.field(&self.0)
+			.finish()
+	}
 }
 
 // TODO: This was stabilized in 1.61, our MSRV is 1.56 currently because of

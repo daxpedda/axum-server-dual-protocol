@@ -2,19 +2,20 @@
 //!
 //! Provides utilities to host a [`axum-server`](axum_server) server that
 //! accepts the HTTP and HTTPS protocol on the same port. See
-//! [`bind_dual_protocol`].
+//! [`bind_dual_protocol()`].
 //!
 //! A common use case for this is if a HTTPS server is hosted on a
 //! non-traditional port, having no corresponding HTTP port. This can be an
 //! issue for clients who try to connect over HTTP and get a connection reset
-//! error.
+//! error. See [`ServerExt::set_upgrade()`].
 //!
 //! # Usage
 //!
-//! The simplest way to start is to use [`bind_dual_protocol`]:
+//! The simplest way to start is to use [`bind_dual_protocol()`]:
 //! ```no_run
 //! # use axum::{routing, Router};
 //! # use axum_server::tls_rustls::RustlsConfig;
+//! #
 //! # #[tokio::main]
 //! # async fn main() -> anyhow::Result<()> {
 //! let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
@@ -23,6 +24,7 @@
 //! # let certificate = rcgen::generate_simple_self_signed([])?;
 //! # let private_key = certificate.serialize_private_key_der();
 //! # let certificate = vec![certificate.serialize_der()?];
+//! #
 //! // User-supplied certificate and private key.
 //! let config = RustlsConfig::from_der(certificate, private_key).await?;
 //!
