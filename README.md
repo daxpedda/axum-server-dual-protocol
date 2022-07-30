@@ -9,16 +9,16 @@
 
 Provides utilities to host a [`axum-server`] server that
 accepts the HTTP and HTTPS protocol on the same port. See
-[`bind_dual_protocol`].
+[`bind_dual_protocol()`].
 
 A common use case for this is if a HTTPS server is hosted on a
 non-traditional port, having no corresponding HTTP port. This can be an
 issue for clients who try to connect over HTTP and get a connection reset
-error.
+error. See [`ServerExt::set_upgrade()`].
 
 ## Usage
 
-The simplest way to start is to use [`bind_dual_protocol`]:
+The simplest way to start is to use [`bind_dual_protocol()`]:
 ```rust
 let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
 
@@ -80,7 +80,7 @@ conditions.
 [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-APACHE
 [`axum`]: https://docs.rs/axum/0.5
 [`axum-server`]: https://docs.rs/axum-server/~0.4.1
-[`bind_dual_protocol`]: https://docs.rs/axum-server-dual-protocol/0.1
+[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.1/axum_server_dual_protocol/fn.bind_dual_protocol.html
 [`hyper`]: https://docs.rs/hyper/0.14
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.5/axum/struct.Router.html

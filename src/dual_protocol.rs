@@ -1,6 +1,6 @@
 //! Dual-protocol server implementation.
 //!
-//! See [`bind_dual_protocol`] and [`DualProtocolAcceptor`].
+//! See [`bind_dual_protocol()`] and [`DualProtocolAcceptor`].
 
 use std::fmt::{self, Debug, Formatter};
 use std::future::Future;

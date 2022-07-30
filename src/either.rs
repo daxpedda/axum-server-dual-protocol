@@ -1,3 +1,9 @@
+//! This is a copy of
+//! <https://github.com/hyperium/http-body/blob/6d7dd177dcbea2ffd1067f9f344beda7af5c78f2/http-body-util/src/either.rs>
+//! and will be unnecessary if the crate is released and dependencies update or
+//! `Either` is backported to `http-body` 0.4. See
+//! <https://github.com/hyperium/http-body/issues/66>.
+
 #![allow(unsafe_code, warnings)]
 
 use std::error::Error;
