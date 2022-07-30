@@ -7,9 +7,7 @@
 //! A common use case for this is if a HTTPS server is hosted on a
 //! non-traditional port, having no corresponding HTTP port. This can be an
 //! issue for clients who try to connect over HTTP and get a connection reset
-//! error. For this specific purpose a [`Layer`](tower_layer::Layer) is provided
-//! that automatically upgrades any connection to HTTPS. See
-//! [`UpgradeHttpLayer`].
+//! error.
 //!
 //! # Usage
 //!
@@ -36,8 +34,33 @@
 //! # }
 //! ```
 //!
-//! We now have a server accepting both HTTP and HTTPS requests! To use
-//! [`UpgradeHttpLayer`] we can simply add it to the [`Router`]:
+//! We now have a server accepting both HTTP and HTTPS requests! Now we can
+//! automatically upgrade incoming HTTP requests to HTTPS using
+//! [`ServerExt::set_upgrade()`] like this:
+//! ```no_run
+//! # use axum::{routing, Router};
+//! # use axum_server::tls_rustls::RustlsConfig;
+//! use axum_server_dual_protocol::ServerExt;
+//!
+//! # #[tokio::main]
+//! # async fn main() -> anyhow::Result<()> {
+//! # let app = Router::new();
+//! # let address = std::net::SocketAddr::from(([127, 0, 0, 1], 0));
+//! # let certificate = rcgen::generate_simple_self_signed([])?;
+//! # let private_key = certificate.serialize_private_key_der();
+//! # let certificate = vec![certificate.serialize_der()?];
+//! # let config = RustlsConfig::from_der(certificate, private_key).await?;
+//! #
+//! axum_server_dual_protocol::bind_dual_protocol(address, config)
+//! 	.set_upgrade(true)
+//! 	.serve(app.into_make_service())
+//! 	.await?;
+//! #
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! Alternatively [`UpgradeHttpLayer`] can be used:
 //! ```
 //! # use axum::{routing, Router};
 //! # use axum_server_dual_protocol::UpgradeHttpLayer;
@@ -86,6 +109,9 @@ mod dual_protocol;
 mod either;
 mod upgrade_http;
 
-pub use dual_protocol::{bind_dual_protocol, DualProtocolAcceptor, DualProtocolFuture};
+pub use dual_protocol::{
+	bind_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture, DualProtocolService,
+	DualProtocolServiceFuture, ServerExt,
+};
 pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};

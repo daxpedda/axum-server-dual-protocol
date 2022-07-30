@@ -14,13 +14,11 @@ use std::net::SocketAddr;
 use anyhow::Result;
 use axum::{routing, Router};
 use axum_server::tls_rustls::RustlsConfig;
-use axum_server_dual_protocol::UpgradeHttpLayer;
+use axum_server_dual_protocol::ServerExt;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-	let app = Router::new()
-		.route("/", routing::get(|| async { "Hello, world!" }))
-		.layer(UpgradeHttpLayer);
+	let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
 
 	let address = SocketAddr::from(([127, 0, 0, 1], 3000));
 	println!("Listening on {}.", address);
@@ -37,6 +35,7 @@ async fn main() -> Result<()> {
 	.await?;
 
 	axum_server_dual_protocol::bind_dual_protocol(address, config)
+		.set_upgrade(true)
 		.serve(app.into_make_service())
 		.await?;
 

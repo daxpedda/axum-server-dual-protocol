@@ -1,5 +1,7 @@
 mod util;
 
+use std::convert;
+
 use anyhow::Result;
 use axum::{routing, Router};
 use reqwest::Client;
@@ -7,6 +9,7 @@ use reqwest::Client;
 #[tokio::test]
 async fn main() -> Result<()> {
 	util::test(
+		convert::identity,
 		Router::new().route("/", routing::get(|| async { "test" })),
 		|certificate, address| async move {
 			let client = Client::builder()

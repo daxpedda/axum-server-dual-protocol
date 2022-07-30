@@ -5,7 +5,9 @@ use std::net::SocketAddr;
 use anyhow::{Error, Result};
 use axum::Router;
 use axum_server::tls_rustls::RustlsConfig;
-use axum_server::Handle;
+use axum_server::{Handle, Server};
+use axum_server_dual_protocol::DualProtocolAcceptor;
+use bytes::Bytes;
 use futures_util::{future, TryFutureExt};
 use http::{Request, Response};
 use hyper::body::HttpBody;
@@ -15,7 +17,8 @@ use reqwest::Certificate;
 
 // TODO: False-positive: <https://github.com/rust-lang/rust-clippy/issues/9076>.
 #[allow(clippy::trait_duplication_in_bounds)]
-pub(crate) async fn test<RouterBody, ResponseBody, ClientFn, ClientFuture>(
+pub(crate) async fn test<RouterBody, ResponseBody, ServerFn, ClientFn, ClientFuture>(
+	server_logic: ServerFn,
 	app: Router<RouterBody>,
 	client_logic: ClientFn,
 ) -> Result<()>
@@ -24,10 +27,10 @@ where
 	Router<RouterBody>: Service<Request<Body>, Response = Response<ResponseBody>>,
 	<Router<RouterBody> as Service<Request<Body>>>::Error: StdError + Send + Sync,
 	<Router<RouterBody> as Service<Request<Body>>>::Future: Send,
-	ResponseBody: 'static + HttpBody + Send,
-	<ResponseBody as HttpBody>::Data: Send,
+	ResponseBody: 'static + HttpBody<Data = Bytes> + Send,
 	<ResponseBody as HttpBody>::Error: StdError + Send + Sync,
-	ClientFn: 'static + Fn(Certificate, SocketAddr) -> ClientFuture + Send + Sync,
+	ServerFn: 'static + FnOnce(Server<DualProtocolAcceptor>) -> Server<DualProtocolAcceptor> + Send,
+	ClientFn: 'static + FnOnce(Certificate, SocketAddr) -> ClientFuture + Send,
 	ClientFuture: Future<Output = Result<()>> + Send,
 {
 	let handle = Handle::new();
@@ -44,13 +47,15 @@ where
 				RustlsConfig::from_der(vec![certificate], key_pair.serialize_private_key_der())
 					.await?;
 
-			axum_server_dual_protocol::bind_dual_protocol(
+			let mut server = axum_server_dual_protocol::bind_dual_protocol(
 				SocketAddr::from(([127, 0, 0, 1], 0)),
 				config,
 			)
-			.handle(handle)
-			.serve(app.into_make_service())
-			.await?;
+			.handle(handle);
+
+			server = server_logic(server);
+
+			server.serve(app.into_make_service()).await?;
 
 			Result::<_, Error>::Ok(())
 		}

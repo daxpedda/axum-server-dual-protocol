@@ -14,9 +14,7 @@ accepts the HTTP and HTTPS protocol on the same port. See
 A common use case for this is if a HTTPS server is hosted on a
 non-traditional port, having no corresponding HTTP port. This can be an
 issue for clients who try to connect over HTTP and get a connection reset
-error. For this specific purpose a [`Layer`] is provided
-that automatically upgrades any connection to HTTPS. See
-[`UpgradeHttpLayer`].
+error.
 
 ## Usage
 
@@ -32,8 +30,19 @@ axum_server_dual_protocol::bind_dual_protocol(address, config)
 	.await?;
 ```
 
-We now have a server accepting both HTTP and HTTPS requests! To use
-[`UpgradeHttpLayer`] we can simply add it to the [`Router`]:
+We now have a server accepting both HTTP and HTTPS requests! Now we can
+automatically upgrade incoming HTTP requests to HTTPS using
+[`ServerExt::set_upgrade()`] like this:
+```rust
+use axum_server_dual_protocol::ServerExt;
+
+axum_server_dual_protocol::bind_dual_protocol(address, config)
+	.set_upgrade(true)
+	.serve(app.into_make_service())
+	.await?;
+```
+
+Alternatively [`UpgradeHttpLayer`] can be used:
 ```rust
 let app = Router::new()
 	.route("/", routing::get(|| async { "Hello, world!" }))
@@ -70,10 +79,11 @@ conditions.
 [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-MIT
 [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/main/LICENSE-APACHE
 [`axum`]: https://docs.rs/axum/0.5
-[`axum-server`]: https://docs.rs/axum-server/0.4
+[`axum-server`]: https://docs.rs/axum-server/~0.4.1
 [`bind_dual_protocol`]: https://docs.rs/axum-server-dual-protocol/0.1
 [`hyper`]: https://docs.rs/hyper/0.14
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.5/axum/struct.Router.html
+[`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.1/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
 [`tower`]: https://docs.rs/tower/0.4
 [`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.1/axum_server_dual_protocol/struct.UpgradeHttpLayer.html
