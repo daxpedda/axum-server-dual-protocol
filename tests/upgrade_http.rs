@@ -4,55 +4,84 @@
 
 mod util;
 
+use std::convert;
+use std::net::SocketAddr;
+
 use anyhow::Result;
 use axum::{routing, Router};
-use axum_server_dual_protocol::UpgradeHttpLayer;
+use axum_server_dual_protocol::{ServerExt, UpgradeHttpLayer};
 use http::header::LOCATION;
 use reqwest::redirect::Policy;
-use reqwest::{Client, StatusCode};
+use reqwest::{Certificate, Client, StatusCode};
 
 #[tokio::test]
-async fn main() -> Result<()> {
+async fn router() -> Result<()> {
 	util::test(
+		convert::identity,
 		Router::new()
 			.route("/", routing::get(|| async { "test" }))
 			.layer(UpgradeHttpLayer),
-		|certificate, address| async move {
-			let client = Client::builder()
-				.add_root_certificate(certificate)
-				.danger_accept_invalid_certs(true)
-				.redirect(Policy::none())
-				.build()?;
-
-			// HTTP index.
-			let response = client.get(format!("http://{address}")).send().await?;
-			assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
-			assert_eq!(
-				*response.headers().get(LOCATION).unwrap(),
-				format!("https://{address}/")
-			);
-			assert_eq!(response.text().await?, "");
-
-			// HTTP not-existing path.
-			let response = client.get(format!("http://{address}/test")).send().await?;
-			assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
-			assert_eq!(
-				*response.headers().get(LOCATION).unwrap(),
-				format!("https://{address}/test")
-			);
-			assert_eq!(response.text().await?, "");
-
-			// HTTPS index.
-			let response = client.get(format!("https://{address}")).send().await?;
-			assert_eq!(response.text().await?, "test");
-
-			// HTTPS not-existing path.
-			let response = client.get(format!("https://{address}/test")).send().await?;
-			assert_eq!(response.status(), StatusCode::NOT_FOUND);
-			assert_eq!(response.text().await?, "");
-
-			Ok(())
-		},
+		test,
 	)
 	.await
+}
+
+#[tokio::test]
+async fn acceptor() -> Result<()> {
+	util::test(
+		|mut server| {
+			server.get_mut().set_upgrade(true);
+			server
+		},
+		Router::new().route("/", routing::get(|| async { "test" })),
+		test,
+	)
+	.await
+}
+
+#[tokio::test]
+async fn server() -> Result<()> {
+	util::test(
+		|server| server.set_upgrade(true),
+		Router::new().route("/", routing::get(|| async { "test" })),
+		test,
+	)
+	.await
+}
+
+async fn test(certificate: Certificate, address: SocketAddr) -> Result<()> {
+	let client = Client::builder()
+		.add_root_certificate(certificate)
+		.danger_accept_invalid_certs(true)
+		.redirect(Policy::none())
+		.build()?;
+
+	// HTTP index.
+	let response = client.get(format!("http://{address}")).send().await?;
+	assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+	assert_eq!(
+		*response.headers().get(LOCATION).unwrap(),
+		format!("https://{address}/")
+	);
+	assert_eq!(response.text().await?, "");
+
+	// HTTP not-existing path.
+	let response = client.get(format!("http://{address}/test")).send().await?;
+	assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+	assert_eq!(
+		*response.headers().get(LOCATION).unwrap(),
+		format!("https://{address}/test")
+	);
+	assert_eq!(response.text().await?, "");
+
+	// HTTPS index.
+	let response = client.get(format!("https://{address}")).send().await?;
+	assert_eq!(response.text().await?, "test");
+
+	// HTTPS not-existing path.
+	let response = client.get(format!("https://{address}/test")).send().await?;
+	assert_eq!(response.status(), StatusCode::NOT_FOUND);
+	assert_eq!(response.text().await?, "");
+
+	Ok(())
 }
