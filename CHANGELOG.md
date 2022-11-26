@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [`axum_server::from_tcp`](https://docs.rs/axum-server/0.4.4/axum_server/fn.from_tcp_rustls.html).
 
 ### Changed
-- Updated `axum` to v0.6.
+- Updated `axum` to 0.6.
 - Increased MSRV to 1.60.
 
 ## [0.2.0] - 2022-07-30
