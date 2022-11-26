@@ -19,8 +19,6 @@ pub(crate) fn server(address: SocketAddr, config: RustlsConfig) -> Server<DualPr
 	axum_server_dual_protocol::bind_dual_protocol(address, config)
 }
 
-// TODO: False-positive: <https://github.com/rust-lang/rust-clippy/issues/9076>.
-#[allow(clippy::trait_duplication_in_bounds)]
 pub(crate) async fn test<
 	RouterBody,
 	ResponseBody,
