@@ -5,7 +5,7 @@
 use std::fmt::{self, Debug, Formatter};
 use std::future::Future;
 use std::io::ErrorKind;
-use std::net::SocketAddr;
+use std::net::{SocketAddr, TcpListener};
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::{io, slice};
@@ -24,8 +24,8 @@ use tokio_util::either::Either as TokioEither;
 
 use crate::{Either as BodyEither, UpgradeHttp};
 
-/// Create a [`Server`] that will bind to provided address, accepting both HTTP
-/// and HTTPS on the same port.
+/// Create a [`Server`] that will bind to the provided address, accepting both
+/// HTTP and HTTPS on the same port.
 #[must_use]
 pub fn bind_dual_protocol(
 	address: SocketAddr,
@@ -34,6 +34,18 @@ pub fn bind_dual_protocol(
 	let acceptor = DualProtocolAcceptor::new(config);
 
 	Server::bind(address).acceptor(acceptor)
+}
+
+/// Create a [`Server`] from an existing [`TcpListener`], accepting both
+/// HTTP and HTTPS on the same port.
+#[must_use]
+pub fn from_tcp_dual_protocol(
+	listener: TcpListener,
+	config: RustlsConfig,
+) -> Server<DualProtocolAcceptor> {
+	let acceptor = DualProtocolAcceptor::new(config);
+
+	Server::from_tcp(listener).acceptor(acceptor)
 }
 
 /// Supplies configuration methods for [`Server`] with [`DualProtocolAcceptor`].

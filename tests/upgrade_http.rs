@@ -1,7 +1,3 @@
-// TODO: This is already fixed in newer versions of Clippy:
-// <https://github.com/rust-lang/rust-clippy/pull/8802>.
-#![allow(clippy::unwrap_used)]
-
 mod util;
 
 use std::convert;
@@ -17,6 +13,7 @@ use reqwest::{Certificate, Client, StatusCode};
 #[tokio::test]
 async fn router() -> Result<()> {
 	util::test(
+		util::server,
 		convert::identity,
 		Router::new()
 			.route("/", routing::get(|| async { "test" }))
@@ -29,6 +26,7 @@ async fn router() -> Result<()> {
 #[tokio::test]
 async fn acceptor() -> Result<()> {
 	util::test(
+		util::server,
 		|mut server| {
 			server.get_mut().set_upgrade(true);
 			server
@@ -42,6 +40,7 @@ async fn acceptor() -> Result<()> {
 #[tokio::test]
 async fn server() -> Result<()> {
 	util::test(
+		util::server,
 		|server| server.set_upgrade(true),
 		Router::new().route("/", routing::get(|| async { "test" })),
 		test,
@@ -49,6 +48,7 @@ async fn server() -> Result<()> {
 	.await
 }
 
+#[allow(clippy::unwrap_used)]
 async fn test(certificate: Certificate, address: SocketAddr) -> Result<()> {
 	let client = Client::builder()
 		.add_root_certificate(certificate)
