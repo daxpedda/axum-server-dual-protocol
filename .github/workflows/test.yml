@@ -21,11 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: cargo ${{ matrix.rust }} build
+        run: cargo +${{ matrix.rust }} build
       - name: Test
-        run: cargo ${{ matrix.rust }} test --all-targets --no-fail-fast
+        run: cargo +${{ matrix.rust }} test --all-targets --no-fail-fast
       - name: Documentation Test
-        run: cargo ${{ matrix.rust }} test --doc --no-fail-fast
+        run: cargo +${{ matrix.rust }} test --doc --no-fail-fast
 
   minimal-versions:
     name: Minimal Versions
@@ -48,4 +48,4 @@ jobs:
         working-directory: minimal-versions
         run: |
           cargo +nightly update -Z minimal-versions
-          cargo ${{ matrix.rust }} build
+          cargo +${{ matrix.rust }} build
