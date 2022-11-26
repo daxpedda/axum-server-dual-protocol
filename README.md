@@ -75,15 +75,15 @@ submitted for inclusion in the work by you, as defined in the Apache-2.0
 license, shall be dual licensed as above, without any additional terms or
 conditions.
 
-[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.2.0/CHANGELOG.md
-[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.2.0/LICENSE-MIT
-[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.2.0/LICENSE-APACHE
+[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.3.0/CHANGELOG.md
+[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.3.0/LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.3.0/LICENSE-APACHE
 [`axum`]: https://docs.rs/axum/0.5
 [`axum-server`]: https://docs.rs/axum-server/~0.4.1
-[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.2/axum_server_dual_protocol/fn.bind_dual_protocol.html
+[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.3/axum_server_dual_protocol/fn.bind_dual_protocol.html
 [`hyper`]: https://docs.rs/hyper/0.14
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.5/axum/struct.Router.html
-[`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.2/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
+[`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.3/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
 [`tower`]: https://docs.rs/tower/0.4
-[`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.2/axum_server_dual_protocol/struct.UpgradeHttpLayer.html
+[`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.3/axum_server_dual_protocol/struct.UpgradeHttpLayer.html
