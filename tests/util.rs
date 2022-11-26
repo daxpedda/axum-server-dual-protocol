@@ -3,7 +3,7 @@ use std::future::Future;
 use std::net::SocketAddr;
 
 use anyhow::{Error, Result};
-use axum::Router;
+use axum::{Router, ServiceExt};
 use axum_server::tls_rustls::RustlsConfig;
 use axum_server::{Handle, Server};
 use axum_server_dual_protocol::DualProtocolAcceptor;
@@ -23,7 +23,7 @@ pub(crate) async fn test<RouterBody, ResponseBody, ServerFn, ClientFn, ClientFut
 	client_logic: ClientFn,
 ) -> Result<()>
 where
-	RouterBody: 'static + HttpBody + Send,
+	RouterBody: 'static,
 	Router<RouterBody>: Service<Request<Body>, Response = Response<ResponseBody>>,
 	<Router<RouterBody> as Service<Request<Body>>>::Error: StdError + Send + Sync,
 	<Router<RouterBody> as Service<Request<Body>>>::Future: Send,
