@@ -53,7 +53,7 @@ let app = Router::new()
 
 As this library heavily relies on [`axum-server`], [`axum`],
 [`tower`] and [`hyper`] the MSRV depends on theirs. At the point of time
-this was written the highest MSRV was [`axum`] with 1.56.
+this was written the highest MSRV was [`axum`] with 1.60.
 
 ## Changelog
 

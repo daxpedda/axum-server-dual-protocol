@@ -152,7 +152,7 @@ where
 	}
 }
 
-// TODO: This was stabilized in 1.61, our MSRV is 1.56 currently because of
+// TODO: This was stabilized in 1.61, our MSRV is 1.60 currently because of
 // `axum`. See <https://github.com/rust-lang/rust/issues/93706>.
 #[allow(clippy::missing_const_for_fn)]
 impl<Service, Request> UpgradeHttpFuture<Service, Request>
