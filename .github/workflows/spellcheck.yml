@@ -20,6 +20,8 @@ jobs:
             ~/.cargo/.crates2.json
             ~/.cargo/bin/cargo-spellcheck
           key: cargo-spellcheck
+      - name: Install dependencies
+        run: sudo apt install llvm-dev libclang-dev clang
       - name: Install cargo-spellcheck
         run: cargo install cargo-spellcheck
       - name: Checkout
