@@ -316,6 +316,9 @@ where
 	}
 }
 
+// TODO: This was stabilized in 1.61, our MSRV is 1.60 currently because of
+// `axum`. See <https://github.com/rust-lang/rust/issues/93706>.
+#[allow(clippy::missing_const_for_fn)]
 impl<Service, RequestBody, ResponseBody>
 	DualProtocolServiceFuture<Service, RequestBody, ResponseBody>
 where
@@ -323,13 +326,13 @@ where
 {
 	/// Create a [`DualProtocolServiceFuture`] in the
 	/// [`Service`](FutureServe::Service) state.
-	const fn new_service(future: Service::Future) -> Self {
+	fn new_service(future: Service::Future) -> Self {
 		Self(FutureServe::Service(future))
 	}
 
 	/// Create a [`DualProtocolServiceFuture`] in the
 	/// [`Upgrade`](FutureServe::Upgrade) state.
-	const fn new_upgrade(
+	fn new_upgrade(
 		future: <UpgradeHttp<Service> as HyperService<Request<RequestBody>>>::Future,
 	) -> Self {
 		Self(FutureServe::Upgrade(future))
