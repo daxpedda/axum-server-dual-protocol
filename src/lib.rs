@@ -112,8 +112,8 @@ mod either;
 mod upgrade_http;
 
 pub use dual_protocol::{
-	bind_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture, DualProtocolService,
-	DualProtocolServiceFuture, ServerExt,
+	bind_dual_protocol, from_tcp_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture,
+	DualProtocolService, DualProtocolServiceFuture, ServerExt,
 };
 pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};
