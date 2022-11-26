@@ -11,20 +11,32 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        rust:
+          - 1.56.0
+          - stable
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        run: cargo build
+        run: cargo ${{ matrix.rust }} build
       - name: Test
-        run: cargo test --all-targets --no-fail-fast
+        run: cargo ${{ matrix.rust }} test --all-targets --no-fail-fast
       - name: Documentation Test
-        run: cargo test --doc --no-fail-fast
+        run: cargo ${{ matrix.rust }} test --doc --no-fail-fast
 
   minimal-versions:
     name: Minimal Versions
 
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        rust:
+          - 1.56.0
+          - stable
 
     steps:
       - name: Install nightly Rust
@@ -36,4 +48,4 @@ jobs:
         working-directory: minimal-versions
         run: |
           cargo +nightly update -Z minimal-versions
-          cargo build
+          cargo ${{ matrix.rust }} build
