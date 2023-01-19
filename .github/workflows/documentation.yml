@@ -34,7 +34,7 @@ jobs:
         env:
           RUSTDOCFLAGS: --crate-version main
         run:
-          cargo doc --no-deps --document-private-items -Z rustdoc-map -Z rustdoc-scrape-examples=examples
+          cargo doc --no-deps --document-private-items -Z rustdoc-map -Z rustdoc-scrape-examples
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact

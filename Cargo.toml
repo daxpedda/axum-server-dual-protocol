@@ -39,6 +39,10 @@ name = "util"
 path = "tests/util.rs"
 test = false
 
+[[example]]
+doc-scrape-examples = true
+name = "hello-world"
+
 [package.metadata.docs.rs]
-cargo-args = ["-Zrustdoc-scrape-examples=examples"]
+cargo-args = ["-Zrustdoc-scrape-examples"]
 targets = []
