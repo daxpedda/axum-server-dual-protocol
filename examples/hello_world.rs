@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
 	let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
 
 	let address = SocketAddr::from(([127, 0, 0, 1], 3000));
-	println!("Listening on {}.", address);
+	println!("Listening on {address}.");
 	println!(
 		"Connecting to \"http://{}\" with any path or query will automatically redirect to \"https://{0}\" with the same path and query.",
 		address
