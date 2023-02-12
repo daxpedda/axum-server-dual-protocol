@@ -37,6 +37,8 @@ async fn bind() -> Result<()> {
 async fn from_tcp() -> Result<()> {
 	util::test(
 		|address, config| {
+			// See <https://github.com/rust-lang/rust-clippy/issues/10011>.
+			#[allow(clippy::unwrap_used)]
 			let listener = TcpListener::bind(address).unwrap();
 			axum_server_dual_protocol::from_tcp_dual_protocol(listener, config)
 		},

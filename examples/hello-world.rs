@@ -23,8 +23,7 @@ async fn main() -> Result<()> {
 	let address = SocketAddr::from(([127, 0, 0, 1], 3000));
 	println!("Listening on {address}.");
 	println!(
-		"Connecting to \"http://{}\" with any path or query will automatically redirect to \"https://{0}\" with the same path and query.",
-		address
+		"Connecting to \"http://{address}\" with any path or query will automatically redirect to \"https://{address}\" with the same path and query."
 	);
 
 	let certificate = rcgen::generate_simple_self_signed([])?;
