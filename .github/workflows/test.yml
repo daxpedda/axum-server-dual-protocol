@@ -15,21 +15,25 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - 1.60.0
-          - stable
+          - { version: 1.60.0, msrv: true }
+          - { version: stable, msrv: false }
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust
         run:
-          rustup toolchain install ${{ matrix.rust }} --profile minimal
+          rustup toolchain install ${{ matrix.rust.version }} --profile minimal
       - name: Build
-        run: cargo +${{ matrix.rust }} build
+        run: cargo +${{ matrix.rust.version }} build
+      - name: Documentation
+        run: cargo +${{ matrix.rust.version }} doc --no-deps
       - name: Test
-        run: cargo +${{ matrix.rust }} test --all-targets --no-fail-fast
+        if: matrix.rust.msrv == false
+        run: cargo +${{ matrix.rust.version }} test --all-targets --no-fail-fast
       - name: Documentation Test
-        run: cargo +${{ matrix.rust }} test --doc --no-fail-fast
+        if: matrix.rust.msrv == false
+        run: cargo +${{ matrix.rust.version }} test --doc --no-fail-fast
 
   minimal-versions:
     name: Minimal Versions
