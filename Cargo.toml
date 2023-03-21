@@ -44,5 +44,4 @@ doc-scrape-examples = true
 name = "hello-world"
 
 [package.metadata.docs.rs]
-cargo-args = ["-Zrustdoc-scrape-examples"]
 targets = []
