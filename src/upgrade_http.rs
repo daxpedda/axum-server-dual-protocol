@@ -7,9 +7,9 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use http::header::{HOST, LOCATION};
+use http::header::{HOST, LOCATION, UPGRADE};
 use http::uri::{Authority, Scheme};
-use http::{Request, Response, StatusCode, Uri};
+use http::{HeaderValue, Request, Response, StatusCode, Uri};
 use hyper::service::Service as HyperService;
 use hyper::Body;
 use pin_project::pin_project;
@@ -88,6 +88,10 @@ where
 			}
 			// HTTP calls might not have their scheme set.
 			_ => {
+				if request.headers().get(UPGRADE) == Some(&HeaderValue::from_static("websocket")) {
+					return UpgradeHttpFuture::new_service(self.service.call(request));
+				}
+
 				let response = Response::builder();
 
 				let response = if let Some(authority) = extract_authority(&request) {
