@@ -92,7 +92,7 @@ where
 				let response = Response::builder();
 
 				let response = if let Some(authority) = extract_authority(&request) {
-					// Build URI to redirect too.
+					// Build URI to redirect to.
 					let mut uri = Uri::builder().scheme(Scheme::HTTPS).authority(authority);
 
 					if let Some(path_and_query) = request.uri().path_and_query() {
