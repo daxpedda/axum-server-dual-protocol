@@ -91,16 +91,33 @@ where
 			Protocol::Plain => {
 				let response = Response::builder();
 
-				let response = if let Some(authority) = extract_authority(&request) {
-					// Handle WebSocket upgrade requests.
-					let scheme = if request.headers().get(UPGRADE)
-						== Some(&HeaderValue::from_static("websocket"))
-					{
-						Scheme::try_from("wss").expect("ASCII string is valid")
-					} else {
-						Scheme::HTTPS
-					};
+				let response = if let Some((authority, scheme)) = extract_authority(&request)
+					.and_then(|authority| {
+						let uri = request.uri();
 
+						// Depending on the scheme we need a different scheme to redirect to.
+
+						// WebSocket handshakes often don't send a scheme, so we check the "Upgrade"
+						// header as well.
+						if uri.scheme_str() == Some("ws")
+							|| request.headers().get(UPGRADE)
+								== Some(&HeaderValue::from_static("websocket"))
+						{
+							Some((
+								authority,
+								Scheme::try_from("wss").expect("ASCII string is valid"),
+							))
+						}
+						// HTTP requests often don't send a scheme.
+						else if uri.scheme() == Some(&Scheme::HTTP) || uri.scheme_str().is_none()
+						{
+							Some((authority, Scheme::HTTPS))
+						}
+						// Unknown scheme, abort.
+						else {
+							None
+						}
+					}) {
 					// Build URI to redirect to.
 					let mut uri = Uri::builder().scheme(scheme).authority(authority);
 
@@ -114,8 +131,8 @@ where
 						.status(StatusCode::MOVED_PERMANENTLY)
 						.header(LOCATION, uri.to_string())
 				} else {
-					// If we can't extract the host, tell the client there is something wrong with
-					// their request.
+					// If we can't extract the host or have an unknown scheme, tell the client there
+					// is something wrong with their request.
 					response.status(StatusCode::BAD_REQUEST)
 				}
 				.body(Body::empty())
