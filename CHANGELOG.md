@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Secure WebSocket handshakes are now accepted, instead of redirected to the `https` URI scheme.
+- Upgrade insecure WebSocket handshakes to the `wss` instead of the `https` URI scheme.
 
 ## [0.4.0] - 2023-05-04
 ### Changed

@@ -7,9 +7,9 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use http::header::{HOST, LOCATION};
+use http::header::{HOST, LOCATION, UPGRADE};
 use http::uri::{Authority, Scheme};
-use http::{Request, Response, StatusCode, Uri};
+use http::{HeaderValue, Request, Response, StatusCode, Uri};
 use hyper::service::Service as HyperService;
 use hyper::Body;
 use pin_project::pin_project;
@@ -92,8 +92,17 @@ where
 				let response = Response::builder();
 
 				let response = if let Some(authority) = extract_authority(&request) {
+					// Handle WebSocket upgrade requests.
+					let scheme = if request.headers().get(UPGRADE)
+						== Some(&HeaderValue::from_static("websocket"))
+					{
+						Scheme::try_from("wss").expect("ASCII string is valid")
+					} else {
+						Scheme::HTTPS
+					};
+
 					// Build URI to redirect to.
-					let mut uri = Uri::builder().scheme(Scheme::HTTPS).authority(authority);
+					let mut uri = Uri::builder().scheme(scheme).authority(authority);
 
 					if let Some(path_and_query) = request.uri().path_and_query() {
 						uri = uri.path_and_query(path_and_query.clone());
