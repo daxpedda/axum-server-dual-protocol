@@ -15,10 +15,21 @@
 //! ```no_run
 //! # use axum::{routing, Router};
 //! # use axum_server::tls_rustls::RustlsConfig;
+//! # use axum_server_dual_protocol::Protocol;
+//! # use http::Request;
+//! # use hyper::Body;
 //! #
 //! # #[tokio::main]
 //! # async fn main() -> anyhow::Result<()> {
-//! let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
+//! let app = Router::new().route(
+//! 	"/",
+//! 	routing::get(|request: Request<Body>| async move {
+//! 		match request.extensions().get::<Protocol>().unwrap() {
+//! 			Protocol::Tls => "Hello, secure World!",
+//! 			Protocol::Plain => "Hello, insecure World!",
+//! 		}
+//! 	}),
+//! );
 //!
 //! # let address = std::net::SocketAddr::from(([127, 0, 0, 1], 0));
 //! # let certificate = rcgen::generate_simple_self_signed([])?;
@@ -113,7 +124,7 @@ mod upgrade_http;
 
 pub use dual_protocol::{
 	bind_dual_protocol, from_tcp_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture,
-	DualProtocolService, DualProtocolServiceFuture, ServerExt,
+	DualProtocolService, DualProtocolServiceFuture, Protocol, ServerExt,
 };
 pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};

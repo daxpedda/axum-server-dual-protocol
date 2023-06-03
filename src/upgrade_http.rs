@@ -15,7 +15,7 @@ use hyper::Body;
 use pin_project::pin_project;
 use tower_layer::Layer;
 
-use crate::Either;
+use crate::{Either, Protocol};
 
 /// [`Layer`] upgrading HTTP requests to HTTPS.
 ///
@@ -82,12 +82,13 @@ where
 	}
 
 	fn call(&mut self, request: Request<RequestBody>) -> Self::Future {
-		match request.uri().scheme() {
-			Some(scheme) if scheme == &Scheme::HTTPS => {
-				UpgradeHttpFuture::new_service(self.service.call(request))
-			}
-			// HTTP calls might not have their scheme set.
-			_ => {
+		match request
+			.extensions()
+			.get::<Protocol>()
+			.expect("`Protocol` should always be set by `DualProtocolService`")
+		{
+			Protocol::Tls => UpgradeHttpFuture::new_service(self.service.call(request)),
+			Protocol::Plain => {
 				let response = Response::builder();
 
 				let response = if let Some(authority) = extract_authority(&request) {

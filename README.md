@@ -20,7 +20,15 @@ error. See [`ServerExt::set_upgrade()`].
 
 The simplest way to start is to use [`bind_dual_protocol()`]:
 ```rust
-let app = Router::new().route("/", routing::get(|| async { "Hello, world!" }));
+let app = Router::new().route(
+	"/",
+	routing::get(|request: Request<Body>| async move {
+		match request.extensions().get::<Protocol>().unwrap() {
+			Protocol::Tls => "Hello, secure World!",
+			Protocol::Plain => "Hello, insecure World!",
+		}
+	}),
+);
 
 // User-supplied certificate and private key.
 let config = RustlsConfig::from_der(certificate, private_key).await?;

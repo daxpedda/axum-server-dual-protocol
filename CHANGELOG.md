@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Introduced [`Protocol`](https://daxpedda.github.io/axum-server-dual-protocol/axum_server_dual_protocol/struct.Protocol.html).
+  Which can be used with [`Request::extensions()`](https://docs.rs/http/0.2.9/http/request/struct.Request.html#method.extensions)
+  to extract this connections protocol.
+
+### Fixed
+- Secure WebSocket handshakes are now accepted, instead of redirected to the `https` URI scheme.
+
 ## [0.4.0] - 2023-05-04
 ### Changed
 - Updated `axum-server` to v0.5.
@@ -30,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit.
 
+[Unreleased]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.4.0...main
 [0.4.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.1.0...v0.2.0
