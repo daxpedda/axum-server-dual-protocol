@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Secure WebSocket handshakes are now accepted, instead of redirected to the `https` URI scheme.
 - Upgrade insecure WebSocket handshakes to the `wss` instead of the `https` URI scheme.
 
+### Changed
+- Unknown URI schemes are now responded to with "400 Bad Request" instead of redirected to the `https` URI scheme.
+
 ## [0.4.0] - 2023-05-04
 ### Changed
 - Updated `axum-server` to v0.5.
