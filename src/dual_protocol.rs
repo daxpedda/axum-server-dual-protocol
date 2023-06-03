@@ -66,6 +66,16 @@ impl ServerExt for Server<DualProtocolAcceptor> {
 	}
 }
 
+/// The protocol used by this connection. See
+/// [`Request::extensions()`](Request::extensions()).
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum Protocol {
+	/// This connection is encrypted with TLS.
+	Tls,
+	/// This connection is unencrypted.
+	Plain,
+}
+
 /// Simultaneous HTTP and HTTPS [`Accept`]or.
 #[derive(Debug, Clone)]
 pub struct DualProtocolAcceptor {
@@ -102,9 +112,9 @@ impl<Service> Accept<AddrStream, Service> for DualProtocolAcceptor {
 
 	fn accept(&self, stream: AddrStream, service: Service) -> Self::Future {
 		let service = if self.upgrade {
-			DualProtocolService::new_upgrade(service)
+			DualProtocolServiceBuilder::new_upgrade(service)
 		} else {
-			DualProtocolService::new_service(service)
+			DualProtocolServiceBuilder::new_service(service)
 		};
 
 		DualProtocolAcceptorFuture::new(stream, service, self.rustls.clone())
@@ -139,7 +149,7 @@ struct PeekState<Service> {
 	/// Transport.
 	stream: AddrStream,
 	/// User-provided [`Service`](hyper::service::Service)
-	service: DualProtocolService<Service>,
+	service: DualProtocolServiceBuilder<Service>,
 	/// Used to proceed to the [`Https`](FutureState::Https) state if
 	/// necessary.
 	rustls: RustlsAcceptor,
@@ -150,7 +160,7 @@ impl<Service> DualProtocolAcceptorFuture<Service> {
 	/// [`Peek`](FutureState::Peek) state.
 	const fn new(
 		stream: AddrStream,
-		service: DualProtocolService<Service>,
+		service: DualProtocolServiceBuilder<Service>,
 		rustls: RustlsAcceptor,
 	) -> Self {
 		Self(FutureState::Peek(Some(PeekState {
@@ -203,9 +213,12 @@ impl<Service> Future for DualProtocolAcceptorFuture<Service> {
 
 							// The first byte in the TLS protocol is always `0x16`.
 							if byte == 0x16 {
-								this.upgrade(rustls.accept(stream, service));
+								this.upgrade(rustls.accept(stream, service.build(Protocol::Tls)));
 							} else {
-								return Poll::Ready(Ok((TokioEither::Right(stream), service)));
+								return Poll::Ready(Ok((
+									TokioEither::Right(stream),
+									service.build(Protocol::Plain),
+								)));
 							}
 						}
 						Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
@@ -222,10 +235,19 @@ impl<Service> Future for DualProtocolAcceptorFuture<Service> {
 	}
 }
 
+/// Hold the user-supplied app until the protocol type is determined.
+#[derive(Debug)]
+struct DualProtocolServiceBuilder<Service>(ServiceServe<Service>);
+
 /// [`Service`](HyperService) wrapping user-supplied app to apply global
 /// [`Layer`](tower_layer::Layer)s according to configuration.
 #[derive(Debug)]
-pub struct DualProtocolService<Service>(ServiceServe<Service>);
+pub struct DualProtocolService<Service> {
+	/// The user-supplied [`Service`](HyperService).
+	service: ServiceServe<Service>,
+	/// The protocol this connection is using.
+	protocol: Protocol,
+}
 
 /// Holds [`Service`](HyperService) to serve for [`DualProtocolService`].
 #[derive(Debug)]
@@ -239,7 +261,7 @@ enum ServiceServe<Service> {
 	Upgrade(UpgradeHttp<Service>),
 }
 
-impl<Service> DualProtocolService<Service> {
+impl<Service> DualProtocolServiceBuilder<Service> {
 	/// Create a [`DualProtocolService`] in the
 	/// [`Service`](ServiceServe::Service) state.
 	const fn new_service(service: Service) -> Self {
@@ -250,6 +272,15 @@ impl<Service> DualProtocolService<Service> {
 	/// [`Upgrade`](ServiceServe::Upgrade) state.
 	const fn new_upgrade(service: Service) -> Self {
 		Self(ServiceServe::Upgrade(UpgradeHttp::new(service)))
+	}
+
+	/// Create a [`DualProtocolService`] when the protocol is established.
+	#[allow(clippy::missing_const_for_fn)]
+	fn build(self, protocol: Protocol) -> DualProtocolService<Service> {
+		DualProtocolService {
+			service: self.0,
+			protocol,
+		}
 	}
 }
 
@@ -263,14 +294,16 @@ where
 	type Future = DualProtocolServiceFuture<Service, RequestBody, ResponseBody>;
 
 	fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-		match &mut self.0 {
+		match &mut self.service {
 			ServiceServe::Service(service) => service.poll_ready(cx),
 			ServiceServe::Upgrade(service) => service.poll_ready(cx),
 		}
 	}
 
-	fn call(&mut self, request: Request<RequestBody>) -> Self::Future {
-		match &mut self.0 {
+	fn call(&mut self, mut request: Request<RequestBody>) -> Self::Future {
+		let _ = request.extensions_mut().insert(self.protocol);
+
+		match &mut self.service {
 			ServiceServe::Service(service) => {
 				DualProtocolServiceFuture::new_service(service.call(request))
 			}
