@@ -2,7 +2,7 @@
 
 [![Crates.io Version](https://img.shields.io/crates/v/axum-server-dual-protocol.svg)](https://crates.io/crates/axum-server-dual-protocol)
 [![Live Build Status](https://img.shields.io/github/checks-status/daxpedda/axum-server-dual-protocol/main?label=CI)](https://github.com/daxpedda/axum-server-dual-protocol/actions?query=branch%3Amain)
-[![Docs.rs Documentation](https://img.shields.io/docsrs/axum-server-dual-protocol)](https://docs.rs/crate/axum-server-dual-protocol)
+[![Docs.rs Documentation](https://img.shields.io/docsrs/axum-server-dual-protocol)](https://docs.rs/axum-server-dual-protocol/0.5.1)
 [![Main Documentation](https://img.shields.io/github/actions/workflow/status/daxpedda/axum-server-dual-protocol/documentation.yml?branch=main)](https://daxpedda.github.io/axum-server-dual-protocol/axum_server_dual_protocol/index.html)
 
 ## Description
@@ -83,12 +83,12 @@ submitted for inclusion in the work by you, as defined in the Apache-2.0
 license, shall be dual licensed as above, without any additional terms or
 conditions.
 
-[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.0/CHANGELOG.md
-[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.0/LICENSE-MIT
-[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.0/LICENSE-APACHE
+[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/CHANGELOG.md
+[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/LICENSE-APACHE
 [`axum`]: https://docs.rs/axum/0.6
 [`axum-server`]: https://docs.rs/axum-server/0.5
-[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/fn.bind_dual_protocol.html
+[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.1/axum_server_dual_protocol/fn.bind_dual_protocol.html
 [`hyper`]: https://docs.rs/hyper/0.14
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.6/axum/struct.Router.html
