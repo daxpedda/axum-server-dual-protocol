@@ -111,9 +111,9 @@
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
 //!
-//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/CHANGELOG.md
-//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/LICENSE-MIT
-//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.1/LICENSE-APACHE
+//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/CHANGELOG.md
+//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-MIT
+//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-APACHE
 //! [`axum`]: https://docs.rs/axum/0.6
 //! [`Router`]: https://docs.rs/axum/0.6/axum/struct.Router.html
 //! [`tower`]: https://docs.rs/tower/0.4
@@ -122,10 +122,10 @@ mod dual_protocol;
 mod either;
 mod upgrade_http;
 
-pub use axum_server;
 pub use dual_protocol::{
 	bind_dual_protocol, from_tcp_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture,
 	DualProtocolService, DualProtocolServiceFuture, Protocol, ServerExt,
 };
 pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};
+pub use {axum_server, bytes, http, hyper, tokio_rustls, tokio_util};
