@@ -12,7 +12,7 @@ keywords = ["axum-server", "server", "web", "http", "https"]
 license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
-rust-version = "1.60"
+rust-version = "1.63"
 version = "0.5.2"
 
 [dependencies]

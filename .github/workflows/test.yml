@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - { version: 1.60.0, msrv: true }
+          - { version: 1.63, msrv: true }
           - { version: stable, msrv: false }
 
     steps:
@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - 1.60.0
+          - 1.63
           - stable
 
     steps:
