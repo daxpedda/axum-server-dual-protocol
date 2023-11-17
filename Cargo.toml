@@ -19,7 +19,7 @@ version = "0.5.2"
 axum-server = { version = "0.5", features = ["tls-rustls"] }
 bytes = { version = "1", default-features = false }
 http = "0.2"
-hyper = "0.14.23"
+hyper = "1.0.1"
 pin-project = "1"
 tokio = "1"
 tokio-rustls = { version = "0.24", default-features = false }
