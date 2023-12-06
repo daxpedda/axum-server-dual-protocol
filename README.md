@@ -61,7 +61,7 @@ let app = Router::new()
 
 As this library heavily relies on [`axum-server`], [`axum`],
 [`tower`] and [`hyper`] the MSRV depends on theirs. At the point of time
-this was written the highest MSRV was [`axum`] with 1.63.
+this was written the highest MSRV was [`axum`] with 1.66.
 
 ## Changelog
 
@@ -86,12 +86,12 @@ conditions.
 [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/CHANGELOG.md
 [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-MIT
 [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-APACHE
-[`axum`]: https://docs.rs/axum/0.6
+[`axum`]: https://docs.rs/axum/0.7
 [`axum-server`]: https://docs.rs/axum-server/0.5
-[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.1/axum_server_dual_protocol/fn.bind_dual_protocol.html
-[`hyper`]: https://docs.rs/hyper/0.14
+[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/fn.bind_dual_protocol.html
+[`hyper`]: https://docs.rs/hyper/1
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
-[`Router`]: https://docs.rs/axum/0.6/axum/struct.Router.html
+[`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
 [`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
 [`tower`]: https://docs.rs/tower/0.4
 [`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/struct.UpgradeHttpLayer.html

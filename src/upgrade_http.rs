@@ -7,15 +7,16 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use bytes::Bytes;
 use http::header::{HOST, LOCATION, UPGRADE};
 use http::uri::{Authority, Scheme};
 use http::{HeaderValue, Request, Response, StatusCode, Uri};
-use hyper::service::Service as HyperService;
-use hyper::Body;
+use http_body_util::{Either, Empty};
 use pin_project::pin_project;
 use tower_layer::Layer;
+use tower_service::Service as TowerService;
 
-use crate::{Either, Protocol};
+use crate::Protocol;
 
 /// [`Layer`] upgrading HTTP requests to HTTPS.
 ///
@@ -31,17 +32,17 @@ impl<Service> Layer<Service> for UpgradeHttpLayer {
 	}
 }
 
-/// [`Service`](HyperService) upgrading HTTP requests to HTTPS by using a
+/// [`Service`](TowerService) upgrading HTTP requests to HTTPS by using a
 /// [301 "Moved Permanently"](https://tools.ietf.org/html/rfc7231#section-6.4.2)
 /// status code.
 ///
-/// Note that this [`Service`](HyperService) always redirects with the given
-/// path and query. Depending on how you apply this [`Service`](HyperService) it
+/// Note that this [`Service`](TowerService) always redirects with the given
+/// path and query. Depending on how you apply this [`Service`](TowerService) it
 /// will redirect even in the case of a resulting 404 "Not Found" status code at
 /// the destination.
 #[derive(Clone, Debug)]
 pub struct UpgradeHttp<Service> {
-	/// Wrapped user-proided [`Service`](HyperService).
+	/// Wrapped user-proided [`Service`](TowerService).
 	service: Service,
 }
 
@@ -52,27 +53,27 @@ impl<Service> UpgradeHttp<Service> {
 	}
 
 	/// Consumes the [`UpgradeHttp`], returning the wrapped
-	/// [`Service`](HyperService).
+	/// [`Service`](TowerService).
 	pub fn into_inner(self) -> Service {
 		self.service
 	}
 
-	/// Return a reference to the wrapped [`Service`](HyperService).
+	/// Return a reference to the wrapped [`Service`](TowerService).
 	pub const fn get_ref(&self) -> &Service {
 		&self.service
 	}
 
-	/// Return a mutable reference to the wrapped [`Service`](HyperService).
+	/// Return a mutable reference to the wrapped [`Service`](TowerService).
 	pub fn get_mut(&mut self) -> &mut Service {
 		&mut self.service
 	}
 }
 
-impl<Service, RequestBody, ResponseBody> HyperService<Request<RequestBody>> for UpgradeHttp<Service>
+impl<Service, RequestBody, ResponseBody> TowerService<Request<RequestBody>> for UpgradeHttp<Service>
 where
-	Service: HyperService<Request<RequestBody>, Response = Response<ResponseBody>>,
+	Service: TowerService<Request<RequestBody>, Response = Response<ResponseBody>>,
 {
-	type Response = Response<Either<ResponseBody, Body>>;
+	type Response = Response<Either<ResponseBody, Empty<Bytes>>>;
 	type Error = Service::Error;
 	type Future = UpgradeHttpFuture<Service, Request<RequestBody>>;
 
@@ -134,7 +135,7 @@ where
 					// is something wrong with their request.
 					response.status(StatusCode::BAD_REQUEST)
 				}
-				.body(Body::empty())
+				.body(Empty::new())
 				.expect("invalid header or body");
 
 				UpgradeHttpFuture::new_upgrade(response)
@@ -143,31 +144,31 @@ where
 	}
 }
 
-/// [`Future`](HyperService::Future) type for [`UpgradeHttp`].
+/// [`Future`](TowerService::Future) type for [`UpgradeHttp`].
 #[pin_project]
 pub struct UpgradeHttpFuture<Service, Request>(#[pin] FutureServe<Service, Request>)
 where
-	Service: HyperService<Request>;
+	Service: TowerService<Request>;
 
 /// Holds [`Future`] to serve for [`UpgradeHttpFuture`].
 #[derive(Debug)]
 #[pin_project(project = UpgradeHttpFutureProj)]
 enum FutureServe<Service, Request>
 where
-	Service: HyperService<Request>,
+	Service: TowerService<Request>,
 {
 	/// The request was using the HTTPS protocol, so we
-	/// will pass-through the wrapped [`Service`](HyperService).
+	/// will pass-through the wrapped [`Service`](TowerService).
 	Service(#[pin] Service::Future),
 	/// The request was using the HTTP protocol, so we
 	/// will upgrade the connection.
-	Upgrade(Option<Response<Body>>),
+	Upgrade(Option<Response<Empty<Bytes>>>),
 }
 
 // Rust can't figure out the correct bounds.
 impl<Service, Request> Debug for UpgradeHttpFuture<Service, Request>
 where
-	Service: HyperService<Request>,
+	Service: TowerService<Request>,
 	FutureServe<Service, Request>: Debug,
 {
 	fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
@@ -180,7 +181,7 @@ where
 
 impl<Service, Request> UpgradeHttpFuture<Service, Request>
 where
-	Service: HyperService<Request>,
+	Service: TowerService<Request>,
 {
 	/// Create a [`UpgradeHttpFuture`] in the [`Service`](FutureServe::Service)
 	/// state.
@@ -190,16 +191,16 @@ where
 
 	/// Create a [`UpgradeHttpFuture`] in the [`Upgrade`](FutureServe::Upgrade)
 	/// state.
-	const fn new_upgrade(response: Response<Body>) -> Self {
+	const fn new_upgrade(response: Response<Empty<Bytes>>) -> Self {
 		Self(FutureServe::Upgrade(Some(response)))
 	}
 }
 
 impl<Service, Request, ResponseBody> Future for UpgradeHttpFuture<Service, Request>
 where
-	Service: HyperService<Request, Response = Response<ResponseBody>>,
+	Service: TowerService<Request, Response = Response<ResponseBody>>,
 {
-	type Output = Result<Response<Either<ResponseBody, Body>>, Service::Error>;
+	type Output = Result<Response<Either<ResponseBody, Empty<Bytes>>>, Service::Error>;
 
 	fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
 		match self.project().0.project() {

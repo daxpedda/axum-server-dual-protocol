@@ -16,15 +16,14 @@
 //! # use axum::{routing, Router};
 //! # use axum_server::tls_rustls::RustlsConfig;
 //! # use axum_server_dual_protocol::Protocol;
-//! # use http::Request;
-//! # use hyper::Body;
+//! # use http::Extensions;
 //! #
 //! # #[tokio::main]
 //! # async fn main() -> anyhow::Result<()> {
 //! let app = Router::new().route(
 //! 	"/",
-//! 	routing::get(|request: Request<Body>| async move {
-//! 		match request.extensions().get::<Protocol>().unwrap() {
+//! 	routing::get(|extensions: Extensions| async move {
+//! 		match extensions.get::<Protocol>().unwrap() {
 //! 			Protocol::Tls => "Hello, secure World!",
 //! 			Protocol::Plain => "Hello, insecure World!",
 //! 		}
@@ -89,7 +88,7 @@
 //!
 //! As this library heavily relies on [`axum-server`](axum_server), [`axum`],
 //! [`tower`] and [`hyper`] the MSRV depends on theirs. At the point of time
-//! this was written the highest MSRV was [`axum`] with 1.63.
+//! this was written the highest MSRV was [`axum`] with 1.66.
 //!
 //! # Changelog
 //!
@@ -114,18 +113,19 @@
 //! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/CHANGELOG.md
 //! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-MIT
 //! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-APACHE
-//! [`axum`]: https://docs.rs/axum/0.6
-//! [`Router`]: https://docs.rs/axum/0.6/axum/struct.Router.html
+//! [`axum`]: https://docs.rs/axum/0.7
+//! [`hyper`]: https://docs.rs/hyper/1
+//! [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
 //! [`tower`]: https://docs.rs/tower/0.4
 
 mod dual_protocol;
-mod either;
 mod upgrade_http;
 
 pub use dual_protocol::{
 	bind_dual_protocol, from_tcp_dual_protocol, DualProtocolAcceptor, DualProtocolAcceptorFuture,
 	DualProtocolService, DualProtocolServiceFuture, Protocol, ServerExt,
 };
-pub use either::Either;
 pub use upgrade_http::{UpgradeHttp, UpgradeHttpFuture, UpgradeHttpLayer};
-pub use {axum_server, bytes, http, hyper, tokio_rustls, tokio_util};
+pub use {
+	axum_server, bytes, http, http_body_util, tokio, tokio_rustls, tokio_util, tower_service,
+};

@@ -5,8 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Re-export `http-body-util`, `tokio` and `tower-service`.
+
 ### Changed
-- Increased MSRV to v1.63.
+- Increased MSRV to v1.66.
+- Updated `http` to v1.
+
+### Removed
+- Removed `hyper` re-export.
 
 ## [0.5.2] - 2023-06-16
 ### Added

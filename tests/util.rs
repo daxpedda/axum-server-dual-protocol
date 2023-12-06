@@ -10,10 +10,9 @@ use axum_server_dual_protocol::DualProtocolAcceptor;
 use bytes::Bytes;
 use futures_util::{future, TryFutureExt};
 use http::{Request, Response};
-use hyper::body::HttpBody;
-use hyper::service::Service;
-use hyper::Body;
+use hyper::body::{Body, Incoming};
 use reqwest::Certificate;
+use tower_service::Service;
 
 pub(crate) fn server(address: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
 	axum_server_dual_protocol::bind_dual_protocol(address, config)
@@ -34,11 +33,11 @@ pub(crate) async fn test<
 ) -> Result<()>
 where
 	RouterBody: 'static,
-	Router<RouterBody>: Service<Request<Body>, Response = Response<ResponseBody>>,
-	<Router<RouterBody> as Service<Request<Body>>>::Error: StdError + Send + Sync,
-	<Router<RouterBody> as Service<Request<Body>>>::Future: Send,
-	ResponseBody: 'static + HttpBody<Data = Bytes> + Send,
-	<ResponseBody as HttpBody>::Error: StdError + Send + Sync,
+	Router<RouterBody>: Service<Request<Incoming>, Response = Response<ResponseBody>>,
+	<Router<RouterBody> as Service<Request<Incoming>>>::Error: StdError + Send + Sync,
+	<Router<RouterBody> as Service<Request<Incoming>>>::Future: Send,
+	ResponseBody: 'static + Body<Data = Bytes> + Send,
+	<ResponseBody as Body>::Error: StdError + Send + Sync,
 	ServerFn: 'static + FnOnce(SocketAddr, RustlsConfig) -> Server<DualProtocolAcceptor> + Send,
 	ServerLogicFn:
 		'static + FnOnce(Server<DualProtocolAcceptor>) -> Server<DualProtocolAcceptor> + Send,

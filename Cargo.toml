@@ -12,24 +12,27 @@ keywords = ["axum-server", "server", "web", "http", "https"]
 license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
-rust-version = "1.63"
+rust-version = "1.66"
 version = "0.5.2"
 
 [dependencies]
-axum-server = { version = "0.5", features = ["tls-rustls"] }
+axum-server = { version = "0.6", features = ["tls-rustls"] }
 bytes = { version = "1", default-features = false }
-http = "0.2"
-hyper = "0.14.23"
+http = "1"
+http-body-util = "0.1"
 pin-project = "1"
 tokio = "1"
 tokio-rustls = { version = "0.24", default-features = false }
 tokio-util = "0.7.1"
 tower-layer = "0.3"
+tower-service = "0.3"
 
 [dev-dependencies]
 anyhow = "1"
-axum = { version = "0.6", default-features = false }
+axum = { version = "0.7", default-features = false }
 futures-util = { version = "0.3", default-features = false }
+http-0 = { package = "http", version = "0.2" }
+hyper = "1"
 rcgen = { version = "0.11", default-features = false }
 reqwest = { version = "0.11", default-features = false, features = ["rustls-tls-manual-roots"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
