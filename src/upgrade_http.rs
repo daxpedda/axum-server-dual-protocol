@@ -53,7 +53,6 @@ impl<Service> UpgradeHttp<Service> {
 
 	/// Consumes the [`UpgradeHttp`], returning the wrapped
 	/// [`Service`](HyperService).
-	#[allow(clippy::missing_const_for_fn)]
 	pub fn into_inner(self) -> Service {
 		self.service
 	}

@@ -1,3 +1,6 @@
+#![cfg(test)]
+#![allow(clippy::missing_assert_message)]
+
 mod util;
 
 use std::convert;
@@ -48,7 +51,6 @@ async fn server() -> Result<()> {
 	.await
 }
 
-#[allow(clippy::unwrap_used)]
 async fn test(certificate: Certificate, address: SocketAddr) -> Result<()> {
 	let client = Client::builder()
 		.add_root_certificate(certificate)

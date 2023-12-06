@@ -9,6 +9,8 @@
 //! any path added to the URI will redirect to the corresponding HTTPS URI.
 //! HTTPS requests should function as expected.
 
+#![allow(clippy::print_stdout)]
+
 use std::net::SocketAddr;
 
 use anyhow::Result;

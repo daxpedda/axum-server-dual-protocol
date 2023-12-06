@@ -275,7 +275,6 @@ impl<Service> DualProtocolServiceBuilder<Service> {
 	}
 
 	/// Create a [`DualProtocolService`] when the protocol is established.
-	#[allow(clippy::missing_const_for_fn)]
 	fn build(self, protocol: Protocol) -> DualProtocolService<Service> {
 		DualProtocolService {
 			service: self.0,
@@ -342,8 +341,9 @@ where
 	Service: HyperService<Request<RequestBody>, Response = Response<ResponseBody>>,
 	FutureServe<Service, RequestBody, ResponseBody>: Debug,
 {
-	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-		f.debug_tuple("DualProtocolServiceFuture")
+	fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+		formatter
+			.debug_tuple("DualProtocolServiceFuture")
 			.field(&self.0)
 			.finish()
 	}
