@@ -5,6 +5,13 @@ on:
     branches: ["main"]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   build-test:
     name: Build & Test
@@ -22,18 +29,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Rust
-        run:
+        run: |
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal
+          rustup default ${{ matrix.rust.version }}
       - name: Build
-        run: cargo +${{ matrix.rust.version }} build
+        run: cargo build
       - name: Documentation
-        run: cargo +${{ matrix.rust.version }} doc --no-deps
+        run: cargo doc --no-deps
       - name: Test
         if: matrix.rust.msrv == false
-        run: cargo +${{ matrix.rust.version }} test --all-targets --no-fail-fast
+        run: cargo test --all-targets --no-fail-fast
       - name: Documentation Test
         if: matrix.rust.msrv == false
-        run: cargo +${{ matrix.rust.version }} test --doc --no-fail-fast
+        run: cargo test --doc --no-fail-fast
 
   minimal-versions:
     name: Minimal Versions
@@ -48,16 +56,17 @@ jobs:
           - stable
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Install Rust
-        run:
+        run: |
           rustup toolchain install ${{ matrix.rust }} --profile minimal
+          rustup default ${{ matrix.rust }}
       - name: Install nightly Rust
         run:
           rustup toolchain install nightly --profile minimal
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Build
         working-directory: minimal-versions
         run: |
           cargo +nightly update -Z minimal-versions
-          cargo +${{ matrix.rust }} build
+          cargo build

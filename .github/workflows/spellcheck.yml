@@ -5,6 +5,13 @@ on:
     branches: ["main"]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   spellcheck:
     name: Spellcheck
@@ -12,20 +19,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache cargo-spellcheck
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/.crates.toml
-            ~/.cargo/.crates2.json
-            ~/.cargo/bin/cargo-spellcheck
-          key: cargo-spellcheck
-      - name: Install dependencies
-        run: sudo apt install llvm-dev libclang-dev clang
-      - name: Install cargo-spellcheck
-        run: cargo install cargo-spellcheck
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-spellcheck
       - name: Run Spellcheck
         run: |
           cargo spellcheck check -m 1
@@ -37,17 +35,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache typos-cli
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/.crates.toml
-            ~/.cargo/.crates2.json
-            ~/.cargo/bin/typos
-          key: typos-cli
-      - name: Install typos-cli
-        run: cargo install typos-cli
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: typos-cli
       - name: Run Typos
         run: typos

@@ -5,6 +5,13 @@ on:
     branches: ["main"]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   rustfmt:
     name: Rustfmt
@@ -27,17 +34,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache Taplo
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/.crates.toml
-            ~/.cargo/.crates2.json
-            ~/.cargo/bin/taplo
-          key: taplo
-      - name: Install Taplo
-        run: cargo install taplo-cli
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: taplo-cli
       - name: Run Taplo
         run: taplo fmt --check
