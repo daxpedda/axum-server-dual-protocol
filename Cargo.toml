@@ -33,7 +33,7 @@ axum = { version = "0.7", default-features = false }
 futures-util = { version = "0.3", default-features = false }
 http-0 = { package = "http", version = "0.2" }
 hyper = "1"
-rcgen = { version = "0.11", default-features = false }
+rcgen = { version = "0.12", default-features = false, features = ["ring"] }
 reqwest = { version = "0.11", default-features = false, features = ["rustls-tls-manual-roots"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
