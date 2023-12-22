@@ -2,7 +2,7 @@
 
 [![Crates.io Version](https://img.shields.io/crates/v/axum-server-dual-protocol.svg)](https://crates.io/crates/axum-server-dual-protocol)
 [![Live Build Status](https://img.shields.io/github/checks-status/daxpedda/axum-server-dual-protocol/main?label=CI)](https://github.com/daxpedda/axum-server-dual-protocol/actions?query=branch%3Amain)
-[![Docs.rs Documentation](https://img.shields.io/docsrs/axum-server-dual-protocol)](https://docs.rs/axum-server-dual-protocol/0.5.2)
+[![Docs.rs Documentation](https://img.shields.io/docsrs/axum-server-dual-protocol)](https://docs.rs/axum-server-dual-protocol/0.6.0)
 [![Main Documentation](https://img.shields.io/github/actions/workflow/status/daxpedda/axum-server-dual-protocol/documentation.yml?branch=main)](https://daxpedda.github.io/axum-server-dual-protocol/axum_server_dual_protocol/index.html)
 
 ## Description
@@ -83,15 +83,15 @@ submitted for inclusion in the work by you, as defined in the Apache-2.0
 license, shall be dual licensed as above, without any additional terms or
 conditions.
 
-[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/CHANGELOG.md
-[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-MIT
-[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-APACHE
+[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/CHANGELOG.md
+[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-APACHE
 [`axum`]: https://docs.rs/axum/0.7
-[`axum-server`]: https://docs.rs/axum-server/0.5
-[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/fn.bind_dual_protocol.html
+[`axum-server`]: https://docs.rs/axum-server/0.6.0
+[`bind_dual_protocol()`]: https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/fn.bind_dual_protocol.html
 [`hyper`]: https://docs.rs/hyper/1
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
-[`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
+[`ServerExt::set_upgrade()`]: https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
 [`tower`]: https://docs.rs/tower/0.4
-[`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.5/axum_server_dual_protocol/struct.UpgradeHttpLayer.html
+[`UpgradeHttpLayer`]: https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/struct.UpgradeHttpLayer.html

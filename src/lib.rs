@@ -110,9 +110,9 @@
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
 //!
-//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/CHANGELOG.md
-//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-MIT
-//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.5.2/LICENSE-APACHE
+//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/CHANGELOG.md
+//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-MIT
+//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-APACHE
 //! [`axum`]: https://docs.rs/axum/0.7
 //! [`hyper`]: https://docs.rs/hyper/1
 //! [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html

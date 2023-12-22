@@ -13,7 +13,7 @@ license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
 rust-version = "1.66"
-version = "0.5.2"
+version = "0.6.0"
 
 [dependencies]
 axum-server = { version = "0.6", features = ["tls-rustls"] }

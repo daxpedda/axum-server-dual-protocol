@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0] - 2023-12-22
 ### Added
 - Re-export `http-body-util`, `tokio` and `tower-service`.
 
 ### Changed
 - Increased MSRV to v1.66.
+- Updated `axum-server` to v0.6.
 - Updated `http` to v1.
 
 ### Removed
@@ -65,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial commit.
 
-[Unreleased]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.2...main
+[Unreleased]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.6.0...main
+[0.5.2]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.4.0...v0.5.0
