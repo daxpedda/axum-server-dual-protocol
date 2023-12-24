@@ -18,7 +18,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}axum_server_dual_protocol
 
     runs-on: ubuntu-latest
 
