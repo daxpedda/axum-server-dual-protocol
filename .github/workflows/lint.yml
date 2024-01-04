@@ -29,4 +29,4 @@ jobs:
       - name: Run Rustdoc
         env:
           RUSTDOCFLAGS: -D warnings
-        run: cargo doc --no-deps --document-private-items --examples
+        run: cargo doc --no-deps --document-private-items --lib --examples
