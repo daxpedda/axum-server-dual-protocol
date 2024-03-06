@@ -37,8 +37,7 @@ jobs:
       - name: Run Rustdoc
         env:
           RUSTDOCFLAGS: --crate-version main
-        run:
-          cargo doc --no-deps --document-private-items -Z rustdoc-map -Z rustdoc-scrape-examples
+        run: cargo doc --no-deps -Z rustdoc-map -Z rustdoc-scrape-examples
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Fix permissions
