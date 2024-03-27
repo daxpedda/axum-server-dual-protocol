@@ -22,7 +22,7 @@ http = "1"
 http-body-util = "0.1"
 pin-project = "1"
 tokio = "1"
-tokio-rustls = { version = "0.24", default-features = false }
+tokio-rustls = { version = "0.26", default-features = false }
 tokio-util = "0.7.1"
 tower-layer = "0.3"
 tower-service = "0.3"
