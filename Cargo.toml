@@ -58,6 +58,7 @@ rust_2021_compatibility = { level = "warn", priority = -1 }
 unused = { level = "warn", priority = -1 }
 # Rust lints.
 deprecated_in_future = "warn"
+ffi_unwind_calls = "warn"
 macro_use_extern_crate = "warn"
 meta_variable_misuse = "warn"
 missing_abi = "warn"
@@ -77,7 +78,6 @@ unused_qualifications = "warn"
 
 [lints.clippy]
 # Clippy groups.
-all = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
 nursery = { level = "warn", priority = -1 }
 pedantic = { level = "warn", priority = -1 }
@@ -93,6 +93,7 @@ dbg_macro = "warn"
 decimal_literal_representation = "warn"
 default_union_representation = "warn"
 empty_drop = "warn"
+empty_enum_variants_with_brackets = "warn"
 empty_structs_with_brackets = "warn"
 error_impl_error = "warn"
 exit = "warn"
@@ -104,7 +105,7 @@ get_unwrap = "warn"
 if_then_some_else_none = "warn"
 impl_trait_in_params = "warn"
 indexing_slicing = "warn"
-infinite_loops = "warn"
+infinite_loop = "warn"
 large_include_file = "warn"
 lossy_float_literal = "warn"
 min_ident_chars = "warn"
@@ -155,4 +156,4 @@ redundant_pub_crate = "allow"
 tabs_in_doc_comments = "allow"
 
 [lints.rustdoc]
-all = "warn"
+all = { level = "warn", priority = -1 }
