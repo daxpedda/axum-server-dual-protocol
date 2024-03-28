@@ -32,7 +32,7 @@ anyhow = "1"
 axum = { version = "0.7", default-features = false }
 futures-util = { version = "0.3", default-features = false }
 hyper = "1"
-rcgen = { version = "0.12", default-features = false, features = ["ring"] }
+rcgen = { version = "0.13", default-features = false, features = ["ring"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-manual-roots"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 

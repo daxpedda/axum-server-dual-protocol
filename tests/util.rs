@@ -47,7 +47,7 @@ where
 	let handle = Handle::new();
 
 	let key_pair = rcgen::generate_simple_self_signed([String::from("localhost")])?;
-	let certificate = key_pair.serialize_der()?;
+	let certificate = key_pair.cert.der().to_vec();
 
 	let server = tokio::spawn({
 		let handle = handle.clone();
@@ -55,7 +55,7 @@ where
 
 		async move {
 			let config =
-				RustlsConfig::from_der(vec![certificate], key_pair.serialize_private_key_der())
+				RustlsConfig::from_der(vec![certificate], key_pair.key_pair.serialize_der())
 					.await?;
 			let address = SocketAddr::from(([127, 0, 0, 1], 0));
 

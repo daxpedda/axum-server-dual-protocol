@@ -30,8 +30,8 @@ async fn main() -> Result<()> {
 
 	let certificate = rcgen::generate_simple_self_signed([])?;
 	let config = RustlsConfig::from_der(
-		vec![certificate.serialize_der()?],
-		certificate.serialize_private_key_der(),
+		vec![certificate.cert.der().to_vec()],
+		certificate.key_pair.serialize_der(),
 	)
 	.await?;
 

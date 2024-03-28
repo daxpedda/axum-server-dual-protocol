@@ -32,8 +32,8 @@
 //!
 //! # let address = std::net::SocketAddr::from(([127, 0, 0, 1], 0));
 //! # let certificate = rcgen::generate_simple_self_signed([])?;
-//! # let private_key = certificate.serialize_private_key_der();
-//! # let certificate = vec![certificate.serialize_der()?];
+//! # let private_key = certificate.key_pair.serialize_der();
+//! # let certificate = vec![certificate.cert.der().to_vec()];
 //! #
 //! // User-supplied certificate and private key.
 //! let config = RustlsConfig::from_der(certificate, private_key).await?;
@@ -59,8 +59,8 @@
 //! # let app = Router::new();
 //! # let address = std::net::SocketAddr::from(([127, 0, 0, 1], 0));
 //! # let certificate = rcgen::generate_simple_self_signed([])?;
-//! # let private_key = certificate.serialize_private_key_der();
-//! # let certificate = vec![certificate.serialize_der()?];
+//! # let private_key = certificate.key_pair.serialize_der();
+//! # let certificate = vec![certificate.cert.der().to_vec()];
 //! # let config = RustlsConfig::from_der(certificate, private_key).await?;
 //! #
 //! axum_server_dual_protocol::bind_dual_protocol(address, config)
