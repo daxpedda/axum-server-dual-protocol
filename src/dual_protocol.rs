@@ -300,15 +300,15 @@ where
 		}
 	}
 
-	fn call(&mut self, mut request: Request<RequestBody>) -> Self::Future {
-		let _ = request.extensions_mut().insert(self.protocol);
+	fn call(&mut self, mut req: Request<RequestBody>) -> Self::Future {
+		let _ = req.extensions_mut().insert(self.protocol);
 
 		match &mut self.service {
 			ServiceServe::Service(service) => {
-				DualProtocolServiceFuture::new_service(service.call(request))
+				DualProtocolServiceFuture::new_service(service.call(req))
 			}
 			ServiceServe::Upgrade(service) => {
-				DualProtocolServiceFuture::new_upgrade(service.call(request))
+				DualProtocolServiceFuture::new_upgrade(service.call(req))
 			}
 		}
 	}

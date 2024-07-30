@@ -27,8 +27,8 @@ pub struct UpgradeHttpLayer;
 impl<Service> Layer<Service> for UpgradeHttpLayer {
 	type Service = UpgradeHttp<Service>;
 
-	fn layer(&self, service: Service) -> Self::Service {
-		UpgradeHttp::new(service)
+	fn layer(&self, inner: Service) -> Self::Service {
+		UpgradeHttp::new(inner)
 	}
 }
 
@@ -81,26 +81,26 @@ where
 		self.service.poll_ready(cx)
 	}
 
-	fn call(&mut self, request: Request<RequestBody>) -> Self::Future {
-		match request
+	fn call(&mut self, req: Request<RequestBody>) -> Self::Future {
+		match req
 			.extensions()
 			.get::<Protocol>()
 			.expect("`Protocol` should always be set by `DualProtocolService`")
 		{
-			Protocol::Tls => UpgradeHttpFuture::new_service(self.service.call(request)),
+			Protocol::Tls => UpgradeHttpFuture::new_service(self.service.call(req)),
 			Protocol::Plain => {
 				let response = Response::builder();
 
-				let response = if let Some((authority, scheme)) = extract_authority(&request)
-					.and_then(|authority| {
-						let uri = request.uri();
+				let response = if let Some((authority, scheme)) =
+					extract_authority(&req).and_then(|authority| {
+						let uri = req.uri();
 
 						// Depending on the scheme we need a different scheme to redirect to.
 
 						// WebSocket handshakes often don't send a scheme, so we check the "Upgrade"
 						// header as well.
 						if uri.scheme_str() == Some("ws")
-							|| request.headers().get(UPGRADE)
+							|| req.headers().get(UPGRADE)
 								== Some(&HeaderValue::from_static("websocket"))
 						{
 							Some((
@@ -121,7 +121,7 @@ where
 					// Build URI to redirect to.
 					let mut uri = Uri::builder().scheme(scheme).authority(authority);
 
-					if let Some(path_and_query) = request.uri().path_and_query() {
+					if let Some(path_and_query) = req.uri().path_and_query() {
 						uri = uri.path_and_query(path_and_query.clone());
 					}
 
