@@ -42,7 +42,7 @@ impl<Service> Layer<Service> for UpgradeHttpLayer {
 /// the destination.
 #[derive(Clone, Debug)]
 pub struct UpgradeHttp<Service> {
-	/// Wrapped user-proided [`Service`](TowerService).
+	/// Wrapped user-provided [`Service`](TowerService).
 	service: Service,
 }
 
