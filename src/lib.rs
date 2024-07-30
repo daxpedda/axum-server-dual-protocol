@@ -84,6 +84,12 @@
 //! # 	.serve(app.into_make_service());
 //! ```
 //!
+//! # Features
+//!
+//! ## `default`
+//!
+//! By default the [`aws-lc-rs`] [`CryptoProvider`] is enabled.
+//!
 //! # Conditional Configurations
 //!
 //! ## `docsrs`
@@ -120,7 +126,9 @@
 //! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/CHANGELOG.md
 //! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-MIT
 //! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-APACHE
+//! [`aws-lc-rs`]: https://docs.rs/aws-lc-rs/1
 //! [`axum`]: https://docs.rs/axum/0.7
+//! [`CryptoProvider`]: tokio_rustls::rustls::crypto::CryptoProvider
 //! [`hyper`]: https://docs.rs/hyper/1
 //! [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
 //! [`tower`]: https://docs.rs/tower/0.4
