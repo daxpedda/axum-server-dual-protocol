@@ -63,8 +63,7 @@ jobs:
           rustup toolchain install ${{ matrix.rust }} --profile minimal
           rustup default ${{ matrix.rust }}
       - name: Install nightly Rust
-        run:
-          rustup toolchain install nightly --profile minimal
+        run: rustup toolchain install nightly --profile minimal
       - name: Build
         working-directory: minimal-versions
         run: |
