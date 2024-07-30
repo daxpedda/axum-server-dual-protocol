@@ -32,6 +32,9 @@ jobs:
         run: |
           rustup toolchain install ${{ matrix.rust.version }} --profile minimal
           rustup default ${{ matrix.rust.version }}
+      - name: Fix MSRV dependencies
+        if: matrix.rust.msrv == true
+        run: cargo update -p tokio --precise 1.38.1
       - name: Build
         run: cargo build
       - name: Documentation
