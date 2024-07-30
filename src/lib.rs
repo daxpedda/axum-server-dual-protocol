@@ -84,6 +84,13 @@
 //! # 	.serve(app.into_make_service());
 //! ```
 //!
+//! # Conditional Configurations
+//!
+//! ## `docsrs`
+//!
+//! This requires Rust nightly and enhances the documentation. It must only be
+//! used with `RUSTDOCFLAGS`, not with `RUSTFLAGS`.
+//!
 //! # MSRV
 //!
 //! As this library heavily relies on [`axum-server`](axum_server), [`axum`],
