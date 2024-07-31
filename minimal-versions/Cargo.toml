@@ -6,11 +6,5 @@ version = "0.0.0"
 
 [dependencies]
 axum-server-dual-protocol = { path = ".." }
-# `axum-server` v0.7.0 incorrectly only requires `hyper-util` v0.1
-hyper-util = "0.1.2"
 # `tower` v0.4.0 incorrectly only requires `tower-layer` v0.3.0
 tower-layer = "0.3.1"
-
-[patch.crates-io]
-axum-server = { git = "https://github.com/daxpedda/axum-server", branch = "crypto-provider" }
-rcgen = { git = "https://github.com/daxpedda/rcgen", branch = "aws-lc-rs-default-features" }

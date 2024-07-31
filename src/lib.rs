@@ -123,9 +123,9 @@
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
 //!
-//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/CHANGELOG.md
-//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-MIT
-//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-APACHE
+//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/CHANGELOG.md
+//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-MIT
+//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-APACHE
 //! [`aws-lc-rs`]: https://docs.rs/aws-lc-rs/1
 //! [`axum`]: https://docs.rs/axum/0.7
 //! [`CryptoProvider`]: tokio_rustls::rustls::crypto::CryptoProvider

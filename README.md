@@ -94,20 +94,20 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
 additional terms or conditions.
 
-[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/CHANGELOG.md
-[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-MIT
-[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.6.0/LICENSE-APACHE
+[CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/CHANGELOG.md
+[LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-APACHE
 [`aws-lc-rs`]: https://docs.rs/aws-lc-rs/1
 [`axum`]: https://docs.rs/axum/0.7
 [`axum-server`]: https://docs.rs/axum-server/0.7.0
 [`bind_dual_protocol()`]:
-	https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/fn.bind_dual_protocol.html
+	https://docs.rs/axum-server-dual-protocol/0.7.0/axum_server_dual_protocol/fn.bind_dual_protocol.html
 [`CryptoProvider`]: https://docs.rs/rustls/0.23/rustls/crypto/struct.CryptoProvider.html
 [`hyper`]: https://docs.rs/hyper/1
 [`Layer`]: https://docs.rs/tower-layer/0.3/tower_layer/trait.Layer.html
 [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
 [`ServerExt::set_upgrade()`]:
-	https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
+	https://docs.rs/axum-server-dual-protocol/0.7.0/axum_server_dual_protocol/trait.ServerExt.html#tymethod.set_upgrade
 [`tower`]: https://docs.rs/tower/0.4
 [`UpgradeHttpLayer`]:
-	https://docs.rs/axum-server-dual-protocol/0.6.0/axum_server_dual_protocol/struct.UpgradeHttpLayer.html
+	https://docs.rs/axum-server-dual-protocol/0.7.0/axum_server_dual_protocol/struct.UpgradeHttpLayer.html

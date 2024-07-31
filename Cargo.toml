@@ -13,13 +13,13 @@ license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
 rust-version = "1.66"
-version = "0.6.0"
+version = "0.7.0"
 
 [features]
 default = ["rustls/aws-lc-rs"]
 
 [dependencies]
-axum-server = { version = "0.7", default-features = false, features = ["tls-rustls-no-provider"] }
+axum-server = { version = "0.7.1", default-features = false, features = ["tls-rustls-no-provider"] }
 bytes = { version = "1", default-features = false }
 http = "1"
 http-body-util = "0.1"
@@ -44,7 +44,6 @@ rustls = { version = "0.23", features = ["aws-lc-rs"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
 [patch.crates-io]
-axum-server = { git = "https://github.com/daxpedda/axum-server", branch = "crypto-provider" }
 rcgen = { git = "https://github.com/daxpedda/rcgen", branch = "aws-lc-rs-default-features" }
 
 [[test]]
