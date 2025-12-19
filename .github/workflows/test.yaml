@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - { description: MSRV, version: 1.66, msrv: true }
+          - { description: MSRV, version: 1.82, msrv: true }
           - { description: Stable, version: stable, msrv: false }
         features:
           - { description: "", features: "" }
@@ -37,7 +37,7 @@ jobs:
           rustup default ${{ matrix.rust.version }}
       - name: Fix MSRV dependencies
         if: matrix.rust.msrv == true
-        run: cargo update -p tokio --precise 1.38.1
+        run: cargo update -p tokio --precise 1.41.1
       - name: Build
         run: cargo build ${{ matrix.features.features }}
       - name: Documentation
@@ -58,7 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - { description: MSRV, version: 1.66 }
+          - { description: MSRV, version: 1.82 }
           - { description: Stable, version: stable }
         features:
           - { description: "", features: "" }

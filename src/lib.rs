@@ -101,7 +101,7 @@
 //!
 //! As this library heavily relies on [`axum-server`](axum_server), [`axum`],
 //! [`tower`] and [`hyper`] the MSRV depends on theirs. At the point of time
-//! this was written the highest MSRV was [`axum`] with 1.66.
+//! this was written the highest MSRV was [`axum`] with 1.82.
 //!
 //! # Changelog
 //!
@@ -123,15 +123,15 @@
 //! license, shall be dual licensed as above, without any additional terms or
 //! conditions.
 //!
-//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/CHANGELOG.md
-//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-MIT
-//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.7.0/LICENSE-APACHE
+//! [CHANGELOG]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.8.0/CHANGELOG.md
+//! [LICENSE-MIT]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.8.0/LICENSE-MIT
+//! [LICENSE-APACHE]: https://github.com/daxpedda/axum-server-dual-protocol/blob/v0.8.0/LICENSE-APACHE
 //! [`aws-lc-rs`]: https://docs.rs/aws-lc-rs/1
-//! [`axum`]: https://docs.rs/axum/0.7
+//! [`axum`]: https://docs.rs/axum/0.8
 //! [`CryptoProvider`]: tokio_rustls::rustls::crypto::CryptoProvider
 //! [`hyper`]: https://docs.rs/hyper/1
-//! [`Router`]: https://docs.rs/axum/0.7/axum/struct.Router.html
-//! [`tower`]: https://docs.rs/tower/0.4
+//! [`Router`]: https://docs.rs/axum/0.8/axum/struct.Router.html
+//! [`tower`]: https://docs.rs/tower/0.3
 
 mod dual_protocol;
 mod upgrade_http;

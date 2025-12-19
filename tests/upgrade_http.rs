@@ -1,5 +1,9 @@
 #![cfg(test)]
-#![allow(clippy::missing_assert_message)]
+#![allow(
+	clippy::missing_assert_message,
+	reason = "No need message, we expect it to work"
+)]
+#![allow(missing_docs, reason = "Test should speak for itself")]
 
 mod util;
 

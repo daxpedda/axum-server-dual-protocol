@@ -31,22 +31,23 @@ use crate::UpgradeHttp;
 pub fn bind_dual_protocol(
 	address: SocketAddr,
 	config: RustlsConfig,
-) -> Server<DualProtocolAcceptor> {
+) -> Server<SocketAddr, DualProtocolAcceptor> {
 	let acceptor = DualProtocolAcceptor::new(config);
-
 	Server::bind(address).acceptor(acceptor)
 }
 
 /// Create a [`Server`] from an existing [`TcpListener`], accepting both
 /// HTTP and HTTPS on the same port.
-#[must_use]
+/// # Errors
+///
+/// Will return an `io::Error` if the `listener` cannot be created
 pub fn from_tcp_dual_protocol(
 	listener: TcpListener,
 	config: RustlsConfig,
-) -> Server<DualProtocolAcceptor> {
+) -> io::Result<Server<SocketAddr, DualProtocolAcceptor>> {
+	let server = axum_server::from_tcp(listener)?;
 	let acceptor = DualProtocolAcceptor::new(config);
-
-	Server::from_tcp(listener).acceptor(acceptor)
+	Ok(server.acceptor(acceptor))
 }
 
 /// Supplies configuration methods for [`Server`] with [`DualProtocolAcceptor`].
@@ -60,7 +61,7 @@ pub trait ServerExt {
 	fn set_upgrade(self, upgrade: bool) -> Self;
 }
 
-impl ServerExt for Server<DualProtocolAcceptor> {
+impl ServerExt for Server<SocketAddr, DualProtocolAcceptor> {
 	fn set_upgrade(mut self, upgrade: bool) -> Self {
 		self.get_mut().set_upgrade(upgrade);
 		self

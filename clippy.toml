@@ -10,4 +10,5 @@ allowed-duplicate-crates = [
 	"windows_x86_64_gnu",
 	"windows_x86_64_gnullvm",
 	"windows_x86_64_msvc",
+	"windows_i686_gnullvm",
 ]

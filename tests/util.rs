@@ -14,7 +14,10 @@ use hyper::body::{Body, Incoming};
 use reqwest::Certificate;
 use tower_service::Service;
 
-pub(crate) fn server(address: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
+pub(crate) fn server(
+	address: SocketAddr,
+	config: RustlsConfig,
+) -> Server<SocketAddr, DualProtocolAcceptor> {
 	axum_server_dual_protocol::bind_dual_protocol(address, config)
 }
 
@@ -38,9 +41,12 @@ where
 	<Router<RouterBody> as Service<Request<Incoming>>>::Future: Send,
 	ResponseBody: 'static + Body<Data = Bytes> + Send,
 	<ResponseBody as Body>::Error: StdError + Send + Sync,
-	ServerFn: 'static + FnOnce(SocketAddr, RustlsConfig) -> Server<DualProtocolAcceptor> + Send,
-	ServerLogicFn:
-		'static + FnOnce(Server<DualProtocolAcceptor>) -> Server<DualProtocolAcceptor> + Send,
+	ServerFn: 'static
+		+ FnOnce(SocketAddr, RustlsConfig) -> Server<SocketAddr, DualProtocolAcceptor>
+		+ Send,
+	ServerLogicFn: 'static
+		+ FnOnce(Server<SocketAddr, DualProtocolAcceptor>) -> Server<SocketAddr, DualProtocolAcceptor>
+		+ Send,
 	ClientFn: 'static + FnOnce(Certificate, SocketAddr) -> ClientFuture + Send,
 	ClientFuture: Future<Output = Result<()>> + Send,
 {
