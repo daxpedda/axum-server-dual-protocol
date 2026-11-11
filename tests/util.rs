@@ -14,8 +14,17 @@ use hyper::body::{Body, Incoming};
 use reqwest::Certificate;
 use tower_service::Service;
 
-pub(crate) fn server(address: SocketAddr, config: RustlsConfig) -> Server<DualProtocolAcceptor> {
-	axum_server_dual_protocol::bind_dual_protocol(address, config)
+#[expect(
+	clippy::unnecessary_wraps,
+	reason = "matches the fallible `ServerFn` bound used by `from_tcp`"
+)]
+pub(crate) fn server(
+	address: SocketAddr,
+	config: RustlsConfig,
+) -> Result<Server<SocketAddr, DualProtocolAcceptor>> {
+	Ok(axum_server_dual_protocol::bind_dual_protocol(
+		address, config,
+	))
 }
 
 pub(crate) async fn test<
@@ -38,9 +47,12 @@ where
 	<Router<RouterBody> as Service<Request<Incoming>>>::Future: Send,
 	ResponseBody: 'static + Body<Data = Bytes> + Send,
 	<ResponseBody as Body>::Error: StdError + Send + Sync,
-	ServerFn: 'static + FnOnce(SocketAddr, RustlsConfig) -> Server<DualProtocolAcceptor> + Send,
-	ServerLogicFn:
-		'static + FnOnce(Server<DualProtocolAcceptor>) -> Server<DualProtocolAcceptor> + Send,
+	ServerFn: 'static
+		+ FnOnce(SocketAddr, RustlsConfig) -> Result<Server<SocketAddr, DualProtocolAcceptor>>
+		+ Send,
+	ServerLogicFn: 'static
+		+ FnOnce(Server<SocketAddr, DualProtocolAcceptor>) -> Server<SocketAddr, DualProtocolAcceptor>
+		+ Send,
 	ClientFn: 'static + FnOnce(Certificate, SocketAddr) -> ClientFuture + Send,
 	ClientFuture: Future<Output = Result<()>> + Send,
 {
@@ -59,7 +71,7 @@ where
 					.await?;
 			let address = SocketAddr::from(([127, 0, 0, 1], 0));
 
-			let mut server = server(address, config).handle(handle);
+			let mut server = server(address, config)?.handle(handle);
 
 			server = server_logic(server);
 

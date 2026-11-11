@@ -1,5 +1,10 @@
 #![cfg(test)]
-#![allow(clippy::missing_assert_message)]
+#![allow(
+	clippy::missing_assert_message,
+	reason = "assertion messages are verbose here"
+)]
+
+//! Tests for upgrading HTTP requests to HTTPS.
 
 mod util;
 

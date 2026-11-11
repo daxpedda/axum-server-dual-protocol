@@ -95,10 +95,11 @@ where
 					extract_authority(&req).and_then(|authority| {
 						let uri = req.uri();
 
-						// Depending on the scheme we need a different scheme to redirect to.
+						// Depending on the scheme we need a different scheme to
+						// redirect to.
 
-						// WebSocket handshakes often don't send a scheme, so we check the "Upgrade"
-						// header as well.
+						// WebSocket handshakes often don't send a scheme, so we
+						// check the "Upgrade" header as well.
 						if uri.scheme_str() == Some("ws")
 							|| req.headers().get(UPGRADE)
 								== Some(&HeaderValue::from_static("websocket"))
@@ -131,8 +132,9 @@ where
 						.status(StatusCode::MOVED_PERMANENTLY)
 						.header(LOCATION, uri.to_string())
 				} else {
-					// If we can't extract the host or have an unknown scheme, tell the client there
-					// is something wrong with their request.
+					// If we can't extract the host or have an unknown scheme,
+					// tell the client there is something wrong with their
+					// request.
 					response.status(StatusCode::BAD_REQUEST)
 				}
 				.body(Empty::new())

@@ -12,17 +12,18 @@ keywords = ["axum-server", "server", "web", "http", "https"]
 license = "MIT OR Apache-2.0"
 name = "axum-server-dual-protocol"
 repository = "https://github.com/daxpedda/axum-server-dual-protocol"
-rust-version = "1.66"
-version = "0.7.0"
+rust-version = "1.82"
+version = "0.8.0"
 
 [features]
-default = ["rustls/aws-lc-rs"]
+default = ["rustls/aws-lc-rs", "rustls/tls12"]
 
 [dependencies]
-axum-server = { version = "0.7.1", default-features = false, features = ["tls-rustls-no-provider"] }
+axum-server = { version = "0.9", default-features = false, features = ["tls-rustls-no-provider"] }
 bytes = { version = "1", default-features = false }
 http = "1"
 http-body-util = "0.1"
+hyper = { version = "1", features = ["server"] }
 pin-project = "1"
 rustls = { version = "0.23", default-features = false }
 tokio = "1"
@@ -33,9 +34,8 @@ tower-service = "0.3"
 
 [dev-dependencies]
 anyhow = "1"
-axum = { version = "0.7", default-features = false }
+axum = { version = "0.8", default-features = false }
 futures-util = { version = "0.3", default-features = false }
-hyper = "1"
 rcgen = { version = "0.13", default-features = false, features = ["aws_lc_rs"] }
 reqwest = { version = "0.12", default-features = false, features = [
 	"rustls-tls-manual-roots-no-provider",
@@ -164,6 +164,8 @@ explicit_deref_methods = "allow"
 future_not_send = "allow"
 module_inception = "allow"
 module_name_repetitions = "allow"
+# Dev-dependencies pull in two versions of `syn` through unrelated proc-macro crates.
+multiple_crate_versions = "allow"
 option_if_let_else = "allow"
 redundant_pub_crate = "allow"
 tabs_in_doc_comments = "allow"

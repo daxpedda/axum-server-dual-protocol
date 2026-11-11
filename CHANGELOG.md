@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0]
+
+### Added
+
+- [`TlsInfo`](https://docs.rs/axum-server/latest/axum_server/tls/struct.TlsInfo.html) is now added to
+  the extensions of requests on encrypted connections.
+
+### Changed
+
+- Updated `axum-server` to v0.9.
+- Updated `axum` to v0.8.
+- Increased MSRV to v1.82.
+- The default feature now also enables TLS 1.2, matching `axum-server`.
+
+### Changed (breaking)
+
+- `bind_dual_protocol()` and `from_tcp_dual_protocol()` now return
+  `Server<SocketAddr, DualProtocolAcceptor>`, as `axum-server` v0.8 made `Server` generic over the
+  address and listener.
+- `from_tcp_dual_protocol()` now returns `io::Result`, because `axum_server::from_tcp` is fallible.
+- `DualProtocolService` now implements `Service<Request<hyper::body::Incoming>>` instead of being
+  generic over the request body, because `axum-server` v0.9 wraps TLS services in `TlsService`.
+
 ## [0.7.0]
 
 ### Added
@@ -104,7 +127,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Initial commit.
 
-[Unreleased]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.7.0...main
+[Unreleased]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.8.0...main
+[0.8.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/daxpedda/axum-server-dual-protocol/compare/v0.5.1...v0.5.2
